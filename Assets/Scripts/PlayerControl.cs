@@ -113,7 +113,7 @@ public class PlayerControl : MonoBehaviour {
 
         switch (coll.gameObject.tag) {
             case "Rupee":
-                rupee_count++;
+                rupee_count += 20;
                 Destroy(coll.gameObject);
                 break;
             case "Heart":
