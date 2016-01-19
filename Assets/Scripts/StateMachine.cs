@@ -194,8 +194,25 @@ public class StateLinkNormalMovement : State {
             pc.current_direction = Direction.SOUTH;
         }
 
-        if (Input.GetButtonDown("A"))
-            state_machine.ChangeState(new StateLinkAttack(pc, pc.selected_weapon_prefab, 15));
+        if (Input.GetButtonDown("A")) {
+            if (pc.health == pc.max_health)
+                state_machine.ChangeState(new StateLinkAttack(pc, pc.wooden_sword_prefab, 15, pc.white_sword_prefab));
+            else
+                state_machine.ChangeState(new StateLinkAttack(pc, pc.wooden_sword_prefab, 15, null));
+
+        }
+        if (Input.GetButtonDown("B")) {
+            if (pc.selected_weapon_prefab == pc.bow_prefab) {
+                if (pc.rupee_count > 0) {
+                    state_machine.ChangeState(new StateLinkAttack(pc, pc.selected_weapon_prefab, 15, pc.selected_projectile_prefab));
+                    pc.rupee_count--;
+                }
+            } else {
+                state_machine.ChangeState(new StateLinkAttack(pc, pc.selected_weapon_prefab, 15, pc.selected_projectile_prefab));
+            }
+
+
+        }
         if (Input.GetKeyDown(KeyCode.I)) {
             pc.invincible = !pc.invincible;
             MonoBehaviour.print("invincibility toggled: " + pc.invincible);
@@ -207,12 +224,16 @@ public class StateLinkAttack : State {
     PlayerControl pc;
     GameObject weapon_prefab;
     GameObject weapon_instance;
+    GameObject projectile;
+    GameObject projectile_prefab;
     float cooldown = 0.0f;
 
-    public StateLinkAttack(PlayerControl pc, GameObject weapon_prefab, int cooldown) {
+
+    public StateLinkAttack(PlayerControl pc, GameObject weapon_prefab, int cooldown, GameObject projectile_prefab) {
         this.pc = pc;
         this.weapon_prefab = weapon_prefab;
         this.cooldown = cooldown;
+        this.projectile_prefab = projectile_prefab;
     }
 
     public override void OnStart() {
@@ -222,27 +243,41 @@ public class StateLinkAttack : State {
 
         weapon_instance = MonoBehaviour.Instantiate(weapon_prefab, pc.transform.position, Quaternion.identity) as GameObject;
 
+
+        
+
         Vector3 direction_offset = new Vector3(0, 1, 0);
         Vector3 direction_eulerangle = Vector3.zero;
 
         if (pc.current_direction == Direction.NORTH) {
             direction_offset = Vector3.up;
-            direction_eulerangle = Vector3.forward * 90;
+            direction_eulerangle = Vector3.forward * 0;
         } else if (pc.current_direction == Direction.EAST) {
             direction_offset = Vector3.right;
-            direction_eulerangle = Vector3.forward * 0;
+            direction_eulerangle = Vector3.forward * 270;
         } else if (pc.current_direction == Direction.SOUTH) {
             direction_offset = Vector3.down;
-            direction_eulerangle = Vector3.forward * 270;
+            direction_eulerangle = Vector3.forward * 180;
         } else if (pc.current_direction == Direction.WEST) {
             direction_offset = Vector3.left;
-            direction_eulerangle = Vector3.forward * 180;
+            direction_eulerangle = Vector3.forward * 90;
         }
 
-        weapon_instance.transform.position += direction_offset;
+        weapon_instance.transform.position += direction_offset * 0.5f;
         Quaternion new_weapon_rotation = new Quaternion();
         new_weapon_rotation.eulerAngles = direction_eulerangle;
         weapon_instance.transform.rotation = new_weapon_rotation;
+
+
+        if (projectile_prefab != null) {
+            projectile = MonoBehaviour.Instantiate(projectile_prefab, pc.transform.position, Quaternion.identity) as GameObject;
+            projectile.transform.position += direction_offset;
+            projectile.transform.rotation = new_weapon_rotation;
+            projectile.GetComponent<projectile>().direction = direction_offset;
+        }
+        
+
+
     }
 
     public override void OnUpdate(float time_delta_fraction) {
