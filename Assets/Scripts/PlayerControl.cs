@@ -67,10 +67,11 @@ public class PlayerControl : MonoBehaviour {
         if (health <= 0)
             Destroy(this.gameObject);
 
+
         animation_state_machine.Update();
 
         control_state_machine.Update();
-        if(control_state_machine.IsFinished()) {
+        if (control_state_machine.IsFinished()) {
             control_state_machine.ChangeState(new StateLinkNormalMovement(this));
         }
     }
