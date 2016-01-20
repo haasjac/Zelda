@@ -195,13 +195,13 @@ public class StateLinkNormalMovement : State {
         }
 
         if (Input.GetButtonDown("A")) {
-            if (pc.health == pc.max_health)
+            if (pc.health == pc.max_health && pc.a_active)
                 state_machine.ChangeState(new StateLinkAttack(pc, pc.wooden_sword_prefab, 15, pc.white_sword_prefab));
             else
                 state_machine.ChangeState(new StateLinkAttack(pc, pc.wooden_sword_prefab, 15, null));
 
         }
-        if (Input.GetButtonDown("B")) {
+        if (Input.GetButtonDown("B") && pc.b_active) {
             if (pc.selected_weapon_prefab == pc.bow_prefab) {
                 if (pc.rupee_count > 0) {
                     state_machine.ChangeState(new StateLinkAttack(pc, pc.selected_weapon_prefab, 15, pc.selected_projectile_prefab));
@@ -241,11 +241,6 @@ public class StateLinkAttack : State {
 
         pc.GetComponent<Rigidbody>().velocity = Vector3.zero;
 
-        weapon_instance = MonoBehaviour.Instantiate(weapon_prefab, pc.transform.position, Quaternion.identity) as GameObject;
-
-
-        
-
         Vector3 direction_offset = new Vector3(0, 1, 0);
         Vector3 direction_eulerangle = Vector3.zero;
 
@@ -263,11 +258,14 @@ public class StateLinkAttack : State {
             direction_eulerangle = Vector3.forward * 90;
         }
 
-        weapon_instance.transform.position += direction_offset * 0.5f;
         Quaternion new_weapon_rotation = new Quaternion();
         new_weapon_rotation.eulerAngles = direction_eulerangle;
-        weapon_instance.transform.rotation = new_weapon_rotation;
 
+        if (weapon_prefab != null) {
+            weapon_instance = MonoBehaviour.Instantiate(weapon_prefab, pc.transform.position, Quaternion.identity) as GameObject;
+            weapon_instance.transform.position += direction_offset * 0.5f;
+            weapon_instance.transform.rotation = new_weapon_rotation;
+        }
 
         if (projectile_prefab != null) {
             projectile = MonoBehaviour.Instantiate(projectile_prefab, pc.transform.position, Quaternion.identity) as GameObject;
@@ -341,8 +339,6 @@ public class StateDamaged : State {
 
 // Additional recommended states:
 // StateDeath
-// StateDamaged
-// StateWeaponSwing
 // StateVictory
 
 

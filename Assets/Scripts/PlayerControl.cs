@@ -46,6 +46,11 @@ public class PlayerControl : MonoBehaviour {
 
     public GameObject map_ref;
 
+    [HideInInspector]
+    public bool a_active = true;
+    [HideInInspector]
+    public bool b_active = true;
+
     // Use this for initialization
     void Start () {
         Application.targetFrameRate = 60;
