@@ -333,7 +333,47 @@ public class StateDamaged : State {
     }
 }
 
+public class StateHudPaused : State {
+    
+}
 
+public class StateHudUnpaused : State {
+    public StateHudUnpaused(Hud hd) {
+
+    }
+}
+
+public class StateHudTrans : State {
+    
+    Hud hd;
+    float target_y;
+    float start_y;
+    float startTime;
+    float journeyLength;
+
+    public StateHudTrans(Hud hd, float target_y) {
+        this.hd = hd;
+        this.target_y = target_y;
+    }
+
+    public override void OnStart() {
+        this.start_y = hd.GetComponent<RectTransform>().anchoredPosition.y;
+        startTime = Time.time;
+        journeyLength = Mathf.Abs(start_y - target_y);
+    }
+
+    public override void OnUpdate(float time_delta_fraction) {
+        if (hd.GetComponent<RectTransform>().anchoredPosition.y != target_y) {
+            Vector3 pos = hd.GetComponent<RectTransform>().anchoredPosition;
+            float distCovered = (Time.time - startTime) * hd.speed;
+            float fracJourney = distCovered / journeyLength;
+            pos.y = Mathf.Lerp(start_y, target_y, fracJourney);
+            hd.GetComponent<RectTransform>().anchoredPosition = pos;
+        } else {
+            ConcludeState();
+        }
+    }
+}
 
 
 
