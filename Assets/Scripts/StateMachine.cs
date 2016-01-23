@@ -169,6 +169,7 @@ public class StateLinkNormalMovement : State {
     public override void OnUpdate(float time_delta_fraction) {
         float horizontal_input = Input.GetAxis("Horizontal");
         float vertical_input = Input.GetAxis("Vertical");
+        Vector3 boom = new Vector3(horizontal_input, vertical_input, 0);
 
         if (vertical_input != 0.0f)
             horizontal_input = 0.0f;
@@ -196,19 +197,19 @@ public class StateLinkNormalMovement : State {
 
         if (Input.GetButtonDown("A")) {
             if (pc.health == pc.max_health && pc.a_active)
-                state_machine.ChangeState(new StateLinkAttack(pc, pc.wooden_sword_prefab, 15, pc.white_sword_prefab));
+                state_machine.ChangeState(new StateLinkAttack(pc, pc.wooden_sword_prefab, 15, pc.white_sword_prefab, boom));
             else
-                state_machine.ChangeState(new StateLinkAttack(pc, pc.wooden_sword_prefab, 15, null));
+                state_machine.ChangeState(new StateLinkAttack(pc, pc.wooden_sword_prefab, 15, null, boom));
 
         }
         if (Input.GetButtonDown("B") && pc.b_active) {
             if (pc.selected_weapon_prefab == pc.bow_prefab) {
                 if (pc.rupee_count > 0) {
-                    state_machine.ChangeState(new StateLinkAttack(pc, pc.selected_weapon_prefab, 15, pc.selected_projectile_prefab));
+                    state_machine.ChangeState(new StateLinkAttack(pc, pc.selected_weapon_prefab, 15, pc.selected_projectile_prefab, boom));
                     pc.rupee_count--;
                 }
             } else {
-                state_machine.ChangeState(new StateLinkAttack(pc, pc.selected_weapon_prefab, 15, pc.selected_projectile_prefab));
+                state_machine.ChangeState(new StateLinkAttack(pc, pc.selected_weapon_prefab, 15, pc.selected_projectile_prefab, boom));
             }
 
 
@@ -226,14 +227,16 @@ public class StateLinkAttack : State {
     GameObject weapon_instance;
     GameObject projectile;
     GameObject projectile_prefab;
+    Vector3 dir;
     float cooldown = 0.0f;
 
 
-    public StateLinkAttack(PlayerControl pc, GameObject weapon_prefab, int cooldown, GameObject projectile_prefab) {
+    public StateLinkAttack(PlayerControl pc, GameObject weapon_prefab, int cooldown, GameObject projectile_prefab, Vector3 dir) {
         this.pc = pc;
         this.weapon_prefab = weapon_prefab;
         this.cooldown = cooldown;
         this.projectile_prefab = projectile_prefab;
+        this.dir = dir;
     }
 
     public override void OnStart() {
@@ -271,7 +274,10 @@ public class StateLinkAttack : State {
             projectile = MonoBehaviour.Instantiate(projectile_prefab, pc.transform.position, Quaternion.identity) as GameObject;
             projectile.transform.position += direction_offset;
             projectile.transform.rotation = new_weapon_rotation;
-            projectile.GetComponent<projectile>().direction = direction_offset;
+            if (projectile_prefab == pc.boomerang_prefab && dir != Vector3.zero)
+                projectile.GetComponent<projectile>().direction = dir.normalized;
+            else
+                projectile.GetComponent<projectile>().direction = direction_offset;
         }
         
 
