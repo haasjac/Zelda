@@ -36,6 +36,7 @@ public class PlayerControl : MonoBehaviour {
     public GameObject boomerang_prefab;
     public GameObject bow_prefab;
     public GameObject arrow_prefab;
+    public GameObject bomb_prefab;
 
     public GameObject room_view;
     public GameObject stagger_block;
@@ -130,7 +131,7 @@ public class PlayerControl : MonoBehaviour {
                 Destroy(coll.gameObject);
                 break;
             case "Bomb":
-                bomb_count++;
+                bomb_count += 4;
                 Destroy(coll.gameObject);
                 break;
             case "Key":
@@ -209,7 +210,7 @@ public class PlayerControl : MonoBehaviour {
 
                     tile_coll.isTrigger = true;
                     coll.gameObject.tag = "Door";
-
+                    
                 }
                 break;
         }
