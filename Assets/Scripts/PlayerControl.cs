@@ -137,6 +137,10 @@ public class PlayerControl : MonoBehaviour {
                 key_count++;
                 Destroy(coll.gameObject);
                 break;
+            case "Enemy":   //for the sake of debugging blade traps
+                if (!invincible)
+                    health -= 0.5f;
+                break;
             case "Door":
                 if (cam_shift > 0.0f)
                     break;
