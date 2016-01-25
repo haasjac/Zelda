@@ -57,7 +57,7 @@ public class Boomerang : projectile {
                 Destroy(coll.gameObject);
                 break;
             case "Bomb":
-                PlayerControl.S.bomb_count++;
+                PlayerControl.S.bomb_count += 4;
                 Destroy(coll.gameObject);
                 break;
             case "Key":

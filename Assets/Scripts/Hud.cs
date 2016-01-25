@@ -1,29 +1,46 @@
 ﻿using UnityEngine;
 using System.Collections;
 using UnityEngine.UI;
+using System.Collections.Generic;
 
 public class Hud : MonoBehaviour {
+
+    static public Hud S;
 
     public Text rupee_text;
     public Text key_text;
     public Text bomb_text;
     public Text health_text;
     public float speed = 0.1f;
-    
+    public List<GameObject> weapons;
+    [HideInInspector]
+    public List<bool> has_weapon;
+    public Image b_button;
+    [HideInInspector]
+    public int curr_weapon;
+
     //Vector3 start;
     //Vector3 target;
     private string health;
     [HideInInspector]
     public bool paused;
-    StateMachine hudMachine;
+    [HideInInspector]
+    public StateMachine hudMachine;
 
     // Use this for initialization
     void Start () {
+        S = this;
         //start = transform.position;
         //target = new Vector3 ()
+        foreach (GameObject go in weapons) {
+            go.GetComponentInChildren<Image>().color = Color.black;
+            go.SetActive(false);
+            has_weapon.Add(false);
+        }
         paused = false;
         hudMachine = new StateMachine();
-        hudMachine.ChangeState(new StateHudUnpaused(this));
+        curr_weapon = 0;
+        //hudMachine.ChangeState(new StateHudUnpaused(this));
     }
 	
 	// Update is called once per frame
