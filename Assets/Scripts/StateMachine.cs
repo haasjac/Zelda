@@ -212,6 +212,11 @@ public class StateLinkNormalMovement : State {
                         state_machine.ChangeState(new StateLinkAttack(pc, pc.selected_weapon_prefab, 15, pc.selected_projectile_prefab, boom));
                         pc.rupee_count--;
                     }
+                } else if (pc.selected_projectile_prefab == pc.bomb_prefab) {
+                    if (pc.bomb_count > 0) {
+                        state_machine.ChangeState(new StateLinkAttack(pc, pc.selected_weapon_prefab, 15, pc.selected_projectile_prefab, boom));
+                        pc.bomb_count--;
+                    }
                 } else {
                     state_machine.ChangeState(new StateLinkAttack(pc, pc.selected_weapon_prefab, 15, pc.selected_projectile_prefab, boom));
                 }

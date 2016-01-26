@@ -134,6 +134,10 @@ public class PlayerControl : MonoBehaviour {
                 bomb_count += 4;
                 Destroy(coll.gameObject);
                 break;
+            case "Bomb_pickup":
+                bomb_count += 4;
+                Destroy(coll.gameObject);
+                break;
             case "Key":
                 key_count++;
                 Destroy(coll.gameObject);
