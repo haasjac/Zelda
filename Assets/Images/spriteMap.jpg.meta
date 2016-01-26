@@ -1,21 +1,20 @@
 fileFormatVersion: 2
-guid: 4ef9166f34cd8ef479da5fcb49d2ce7a
-timeCreated: 1453765455
+guid: 423a2eaa42be10a44b078f7be59a589d
+timeCreated: 1453797763
 licenseType: Free
 TextureImporter:
   fileIDToRecycleName:
-    21300000: UnderworldEnemies_0
-    21300002: UnderworldEnemies_1
-    21300004: UnderworldEnemies_2
-    21300006: UnderworldEnemies_3
-    21300008: UnderworldEnemies_4
-    21300010: UnderworldEnemies_5
-    21300012: UnderworldEnemies_6
-    21300014: UnderworldEnemies_7
-    21300016: UnderworldEnemies_8
-    21300018: UnderworldEnemies_9
-    21300020: UnderworldEnemies_10
-    21300022: UnderworldEnemies_11
+    21300000: spriteMap_0
+    21300002: spriteMap_1
+    21300004: spriteMap_2
+    21300006: spriteMap_3
+    21300008: spriteMap_4
+    21300010: spriteMap_5
+    21300012: spriteMap_6
+    21300014: spriteMap_7
+    21300016: spriteMap_8
+    21300018: spriteMap_9
+    21300020: spriteMap_10
   serializedVersion: 2
   mipmaps:
     mipMapMode: 0
@@ -62,134 +61,123 @@ TextureImporter:
   buildTargetSettings: []
   spriteSheet:
     sprites:
-    - name: UnderworldEnemies_0
+    - name: spriteMap_0
       rect:
         serializedVersion: 2
-        x: 846
-        y: 118
-        width: 19
-        height: 19
+        x: 192
+        y: 208
+        width: 16
+        height: 16
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
-    - name: UnderworldEnemies_1
+    - name: spriteMap_1
       rect:
         serializedVersion: 2
-        x: 869
-        y: 117
-        width: 23
-        height: 22
+        x: 191
+        y: 160
+        width: 17
+        height: 16
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
-    - name: UnderworldEnemies_2
-      rect:
-        serializedVersion: 2
-        x: 182
-        y: 142
-        width: 20
-        height: 19
-      alignment: 0
-      pivot: {x: 0.5, y: 0.5}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-    - name: UnderworldEnemies_3
+    - name: spriteMap_2
       rect:
         serializedVersion: 2
         x: 208
-        y: 143
-        width: 19
-        height: 17
+        y: 160
+        width: 16
+        height: 16
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
-    - name: UnderworldEnemies_4
+    - name: spriteMap_3
       rect:
         serializedVersion: 2
-        x: 1446
-        y: 143
-        width: 13
+        x: 48
+        y: 192
+        width: 15
+        height: 16
+      alignment: 9
+      pivot: {x: 0.5272669, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+    - name: spriteMap_4
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 192
+        width: 16
         height: 15
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
-    - name: UnderworldEnemies_5
+    - name: spriteMap_5
       rect:
         serializedVersion: 2
-        x: 1463
-        y: 143
-        width: 10
-        height: 15
+        x: 160
+        y: 144
+        width: 15
+        height: 16
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
-    - name: UnderworldEnemies_6
+    - name: spriteMap_6
       rect:
         serializedVersion: 2
-        x: 494
-        y: 142
-        width: 20
-        height: 20
+        x: 81
+        y: 144
+        width: 14
+        height: 16
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
-    - name: UnderworldEnemies_7
+    - name: spriteMap_7
       rect:
         serializedVersion: 2
-        x: 519
-        y: 140
-        width: 23
-        height: 24
+        x: 0
+        y: 160
+        width: 16
+        height: 16
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
-    - name: UnderworldEnemies_8
+    - name: spriteMap_8
       rect:
         serializedVersion: 2
-        x: 1181
-        y: 116
-        width: 23
-        height: 24
+        x: 16
+        y: 160
+        width: 15
+        height: 16
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
-    - name: UnderworldEnemies_9
+    - name: spriteMap_9
       rect:
         serializedVersion: 2
-        x: 218
-        y: 99
-        width: 12
-        height: 10
+        x: 175
+        y: 224
+        width: 17
+        height: 16
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
-    - name: UnderworldEnemies_10
+    - name: spriteMap_10
       rect:
         serializedVersion: 2
-        x: 235
-        y: 99
-        width: 10
-        height: 10
-      alignment: 0
-      pivot: {x: 0.5, y: 0.5}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-    - name: UnderworldEnemies_11
-      rect:
-        serializedVersion: 2
-        x: 251
-        y: 98
-        width: 10
-        height: 11
+        x: 160
+        y: 224
+        width: 15
+        height: 16
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}

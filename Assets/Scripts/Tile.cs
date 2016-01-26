@@ -70,9 +70,6 @@ public class Tile : MonoBehaviour {
                 bc.center = Vector3.zero;
                 bc.size = Vector3.one;
                 break;
-            //case 'P': //Pushable
-            //    gameObject.tag = "Pushable";
-            //    break;
             case 'L': //Locked
                 gameObject.tag = "Locked";
                 break;

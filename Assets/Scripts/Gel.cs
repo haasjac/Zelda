@@ -9,6 +9,7 @@ public class Gel : MonoBehaviour {
     public float distance = 0.0f;
     public float cooldown = 0.0f;
     public float target_cooldown = 0.0f;
+    public int health = 1;
     public bool rest = false;
     public Direction direction = Direction.NORTH;
 
@@ -28,20 +29,22 @@ public class Gel : MonoBehaviour {
             }
         }
 
-        if (rest) {                //if resting, don't move
+        if (rest && distance <= 0.0f) {                //if resting, don't move
             cooldown -= Time.deltaTime;
-            change_direction();
-            if (cooldown <= 0.0f)
+//            change_direction();
+            if (cooldown <= 0.0f) { 
                 rest = false;
+                change_direction();
+            }
         }
-        else if (!check_direction(this.gameObject, cam)) {
+        else if (!check_direction(this.gameObject, cam) && distance <= 0.0f) {
             change_direction();
         }
         else if(distance <= 0.0f) {
             //choose a new direction
             distance = 1f;
             //            while (!check_direction(this.gameObject, cam))
-            change_direction();
+//            change_direction();
         }
         else {  //move
             Vector3 pos = this.transform.position;
@@ -81,15 +84,25 @@ public class Gel : MonoBehaviour {
         Vector3 pos = this.transform.position;
         Vector3 cam_pos = cam.transform.position;
         
-        if (direction == Direction.EAST && pos.x + 1 >= cam_pos.x + 5.5)
+        if (direction == Direction.EAST && pos.x + 1 >= cam_pos.x + 5.6)
             return false;
-        if (direction == Direction.WEST && pos.x - 1 <= cam_pos.x - 5.5)
+        if (direction == Direction.WEST && pos.x - 1 <= cam_pos.x - 5.6)
             return false;
-        if (direction == Direction.NORTH && pos.y + 1 >= cam_pos.y + 3.0)
+        if (direction == Direction.NORTH && pos.y + 1 >= cam_pos.y + 1.6)
             return false;
-        if (direction == Direction.SOUTH && pos.y - 1 <= cam_pos.y - 3.0)
+        if (direction == Direction.SOUTH && pos.y - 1 <= cam_pos.y - 4.6)
             return false;
 
         return true;
+    }
+
+    void OnCollisionEnter(Collision coll) {
+        switch (coll.gameObject.tag) {
+            case "PlayerProjectile":
+                health -= 1;
+                if (health <= 0)
+                    Destroy(this.gameObject);
+                break;
+        }
     }
 }

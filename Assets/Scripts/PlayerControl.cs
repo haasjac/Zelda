@@ -44,6 +44,12 @@ public class PlayerControl : MonoBehaviour {
     public Direction cam_dir = Direction.EAST;
     public float push_cooldown = 0;
     public float cam_shift = 0;
+    public Vector3 link_hold = Vector3.zero;
+
+    public Sprite sprite_tl;
+    public Sprite sprite_tr;
+    public Sprite sprite_l;
+    public Sprite sprite_r;
 
     public GameObject map_ref;
 
@@ -113,6 +119,9 @@ public class PlayerControl : MonoBehaviour {
 
             cam_shift -= shift;
             room_view.transform.position = pos;
+
+            //keep player still
+            transform.position = link_hold;
         }
     }
 
@@ -167,6 +176,7 @@ public class PlayerControl : MonoBehaviour {
                 }
 
                 S.transform.position = link_pos;
+                link_hold = link_pos;
                 break;
         }
     }
@@ -195,24 +205,50 @@ public class PlayerControl : MonoBehaviour {
                 if (key_count > 0) {
                     //make this fancy! (maybe add animations? spawn a replacement tile?)
                     //80, 81, 101, 106
-                    Vector3 pos = coll.gameObject.transform.position;
-                    BoxCollider tile_coll = coll.gameObject.GetComponent<Tile>().GetComponent<BoxCollider>();
-                    if (coll.gameObject.GetComponent<Tile>().tileNum == 80) {    //upper-left
+                    //                    Vector3 pos = coll.gameObject.transform.position;
+                    //BoxCollider tile_coll = coll.gameObject.GetComponent<Tile>().GetComponent<BoxCollider>();
+                    //if (coll.gameObject.GetComponent<Tile>().tileNum == 80) {    //upper-left
+                    //    //no more solid collisions
+                    //    tile_coll.center = new Vector3(0, 3, 0);
+                    //    tile_coll.size = Vector3.zero;
+                    //} else if (coll.gameObject.GetComponent<Tile>().tileNum == 81) {    //upper-right
+                    //    tile_coll.center = new Vector3(-0.5f, 0.33f, 0);
+                    //    tile_coll.size = new Vector3(1.75f, 0.5f, 1);
+                    //} else if (coll.gameObject.GetComponent<Tile>().tileNum == 101) {    //right
+                    //    tile_coll.center = new Vector3(0.5f, 0, 0);
+                    //    tile_coll.size = new Vector3(0.5f, 1, 1);
+                    //} else if (coll.gameObject.GetComponent<Tile>().tileNum == 106) {    //left
+                    //    tile_coll.center = new Vector3(-0.5f, 0, 0);
+                    //    tile_coll.size = new Vector3(-0.5f, 1, 1);
+                    //}
+                    BoxCollider locked = coll.gameObject.GetComponent<BoxCollider>();
+                    if (coll.gameObject.name == "locked_TL")
+                    {    //upper-left
                         //no more solid collisions
-                        tile_coll.center = new Vector3(0, 3, 0);
-                        tile_coll.size = Vector3.zero;
-                    } else if (coll.gameObject.GetComponent<Tile>().tileNum == 81) {    //upper-right
-                        tile_coll.center = new Vector3(-0.5f, 0.33f, 0);
-                        tile_coll.size = new Vector3(1.75f, 0.5f, 1);
-                    } else if (coll.gameObject.GetComponent<Tile>().tileNum == 101) {    //right
-                        tile_coll.center = new Vector3(0.5f, 0, 0);
-                        tile_coll.size = new Vector3(0.5f, 1, 1);
-                    } else if (coll.gameObject.GetComponent<Tile>().tileNum == 106) {    //left
-                        tile_coll.center = new Vector3(-0.5f, 0, 0);
-                        tile_coll.size = new Vector3(-0.5f, 1, 1);
+                        locked.center = new Vector3(0, 3 / 6f, 0);
+                        locked.size = Vector3.zero;
+                        coll.gameObject.GetComponent<SpriteRenderer>().sprite = sprite_tl;
+                    }
+                    else if (coll.gameObject.name == "locked_TR")
+                    {    //upper-right
+                        locked.center = new Vector3(-0.5f / 6f, 0.33f / 6f, 0);
+                        locked.size = new Vector3(1.75f / 6f, 0.5f / 6f, 1);
+                        coll.gameObject.GetComponent<SpriteRenderer>().sprite = sprite_tr;
+                    }
+                    else if (coll.gameObject.name == "locked_R")
+                    {    //right
+                        locked.center = new Vector3(0.5f / 6f, 0, 0);
+                        locked.size = new Vector3(0.5f / 6f, 1 / 6f, 1);
+                        coll.gameObject.GetComponent<SpriteRenderer>().sprite = sprite_r;
+                    }
+                    else if (coll.gameObject.name == "locked_L")
+                    {    //left
+                        locked.center = new Vector3(-0.5f / 6f, 0, 0);
+                        locked.size = new Vector3(-0.5f / 6f, 1 / 6f, 1);
+                        coll.gameObject.GetComponent<SpriteRenderer>().sprite = sprite_l;
                     }
 
-                    tile_coll.isTrigger = true;
+                    locked.isTrigger = true;
                     coll.gameObject.tag = "Door";
                     
                 }
