@@ -3,65 +3,6 @@ using System.Collections;
 using UnityEngine.UI;
 using System.Collections.Generic;
 
-// State Machines are responsible for processing states, notifying them when they're about to begin or conclude, etc.
-public class StateMachine
-{
-	private State _current_state;
-	
-	public void ChangeState(State new_state)
-	{
-		if(_current_state != null)
-		{
-			_current_state.OnFinish();
-		}
-		
-		_current_state = new_state;
-		// States sometimes need to reset their machine. 
-		// This reference makes that possible.
-		_current_state.state_machine = this;
-		_current_state.OnStart();
-	}
-	
-	public void Reset()
-	{
-		if(_current_state != null)
-			_current_state.OnFinish();
-		_current_state = null;
-	}
-	
-	public void Update()
-	{
-		if(_current_state != null)
-		{
-			float time_delta_fraction = Time.deltaTime / (1.0f / Application.targetFrameRate);
-			_current_state.OnUpdate(time_delta_fraction);
-		}
-	}
-
-	public bool IsFinished()
-	{
-		return _current_state == null;
-	}
-}
-
-// A State is merely a bundle of behavior listening to specific events, such as...
-// OnUpdate -- Fired every frame of the game.
-// OnStart -- Fired once when the state is transitioned to.
-// OnFinish -- Fired as the state concludes.
-// State Constructors often store data that will be used during the execution of the State.
-public class State
-{
-	// A reference to the State Machine processing the state.
-	public StateMachine state_machine;
-	
-	public virtual void OnStart() {}
-	public virtual void OnUpdate(float time_delta_fraction) {} // time_delta_fraction is a float near 1.0 indicating how much more / less time this frame took than expected.
-	public virtual void OnFinish() {}
-	
-	// States may call ConcludeState on themselves to end their processing.
-	public void ConcludeState() { state_machine.Reset(); }
-}
-
 // A State that takes a renderer and a sprite, and implements idling behavior.
 // The state is capable of transitioning to a walking state upon key press.
 public class StateIdleWithSprite : State
@@ -212,6 +153,11 @@ public class StateLinkNormalMovement : State {
                         state_machine.ChangeState(new StateLinkAttack(pc, pc.selected_weapon_prefab, 15, pc.selected_projectile_prefab, boom));
                         pc.rupee_count--;
                     }
+                } else if (pc.selected_projectile_prefab == pc.bomb_prefab) {
+                    if (pc.bomb_count > 0) {
+                        state_machine.ChangeState(new StateLinkAttack(pc, pc.selected_weapon_prefab, 15, pc.selected_projectile_prefab, boom));
+                        pc.bomb_count--;
+                    }
                 } else {
                     state_machine.ChangeState(new StateLinkAttack(pc, pc.selected_weapon_prefab, 15, pc.selected_projectile_prefab, boom));
                 }
@@ -341,121 +287,5 @@ public class StateDamaged : State {
         }
     }
 }
-
-public class StateHudPaused : State {
-    Hud hd;
-    int next_weapon;
-
-    public StateHudPaused(Hud hd) {
-        this.hd = hd;
-    }
-
-    public override void OnStart() {
-        next_weapon = hd.curr_weapon;
-    }
-
-    public override void OnUpdate(float time_delta_fraction) {
-        if (hd.has_weapon.Contains(true)) {
-            float dir = Input.GetAxis("Horizontal");
-            if (Input.GetButtonDown("Horizontal")) {
-                if (dir > 0) {
-                    do {
-                        if (next_weapon + 1 >= hd.weapons.Count)
-                            next_weapon = 0;
-                        else
-                            next_weapon++;
-                    } while (!hd.has_weapon[next_weapon]);
-                } else {
-                    do {
-                        if (next_weapon == 0)
-                            next_weapon = hd.weapons.Count - 1;
-                        else
-                            next_weapon--;
-                    } while (!hd.has_weapon[next_weapon]);
-                }
-            }
-            hd.weapons[hd.curr_weapon].GetComponentInChildren<Image>().color = Color.black;
-            hd.curr_weapon = next_weapon;
-            hd.weapons[hd.curr_weapon].GetComponentInChildren<Image>().color = Color.red;
-        }
-    }
-
-    public override void OnFinish() {
-        if (hd.has_weapon.Contains(true)) {
-            switch (hd.curr_weapon) {
-                case 0:
-                    PlayerControl.S.selected_weapon_prefab = null;
-                    PlayerControl.S.selected_projectile_prefab = PlayerControl.S.bomb_prefab;
-                    break;
-                case 1:
-                    PlayerControl.S.selected_weapon_prefab = null;
-                    PlayerControl.S.selected_projectile_prefab = PlayerControl.S.boomerang_prefab;
-                    break;
-                case 2:
-                    PlayerControl.S.selected_weapon_prefab = PlayerControl.S.bow_prefab;
-                    PlayerControl.S.selected_projectile_prefab = PlayerControl.S.arrow_prefab;
-                    break;
-            }
-        }
-    }
-}
-
-public class StateHudUnpaused : State {
-    Hud hd;
-
-    public StateHudUnpaused(Hud hd) {
-        this.hd = hd;
-    }
-
-    public override void OnStart() {
-        if (hd.has_weapon.Contains(true)) {
-            hd.b_button.sprite = PlayerControl.S.selected_projectile_prefab.GetComponent<SpriteRenderer>().sprite;
-        }
-    }
-
-}
-
-public class StateHudTrans : State {
-    
-    Hud hd;
-    float target_y;
-    float start_y;
-    float startTime;
-    float journeyLength;
-
-    public StateHudTrans(Hud hd, float target_y) {
-        this.hd = hd;
-        this.target_y = target_y;
-    }
-
-    public override void OnStart() {
-        this.start_y = hd.GetComponent<RectTransform>().anchoredPosition.y;
-        startTime = Time.time;
-        journeyLength = Mathf.Abs(start_y - target_y);
-    }
-
-    public override void OnUpdate(float time_delta_fraction) {
-        if (hd.GetComponent<RectTransform>().anchoredPosition.y != target_y) {
-            Vector3 pos = hd.GetComponent<RectTransform>().anchoredPosition;
-            float distCovered = (Time.time - startTime) * hd.speed;
-            float fracJourney = distCovered / journeyLength;
-            pos.y = Mathf.Lerp(start_y, target_y, fracJourney);
-            hd.GetComponent<RectTransform>().anchoredPosition = pos;
-        } else {
-            ConcludeState();
-            if (hd.paused) {
-                hd.hudMachine.ChangeState(new StateHudPaused(hd));
-            } else {
-                hd.hudMachine.ChangeState(new StateHudUnpaused(hd));
-            }
-        }
-    }
-}
-
-
-
-// Additional recommended states:
-// StateDeath
-// StateVictory
 
 
