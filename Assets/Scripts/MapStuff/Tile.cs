@@ -103,13 +103,18 @@ public class Tile : MonoBehaviour {
                 }
                 break;
             case 'W': // Water
-            bc.center = Vector3.zero;
-            bc.size = Vector3.one;
-            gameObject.layer = LayerMask.NameToLayer("Water");
-            break;
+                bc.center = Vector3.zero;
+                bc.size = Vector3.one;
+                gameObject.layer = LayerMask.NameToLayer("Water");
+                break;
+            case 'V': // Lava
+                bc.center = Vector3.zero;
+                bc.size = Vector3.one;
+                gameObject.layer = LayerMask.NameToLayer("Lava");
+                break;
             default:
-            bc.enabled = false;
-            break;
+                bc.enabled = false;
+                break;
         }
 	}	
 }
