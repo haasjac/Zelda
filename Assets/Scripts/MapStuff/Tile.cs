@@ -75,7 +75,7 @@ public class Tile : MonoBehaviour {
                 break;
             case 'D': //Door
                 gameObject.tag = "Door";
-                GetComponent<Collider>().isTrigger = true;
+                bc.isTrigger = true;
                 //which door is it?
                 if (this.tileNum == 48) {
                     bc.center = new Vector3(0.5f, 0, 0);
@@ -89,7 +89,7 @@ public class Tile : MonoBehaviour {
                         bc.size = new Vector3(1.75f, -0.5f, 1);
                     } else {
                         bc.enabled = false;
-                        GetComponent<Collider>().isTrigger = false;
+                        bc.isTrigger = false;
                     }
                 } else if (this.tileNum == 92 || this.tileNum == 93) {
                     if (this.tileNum == 93) {
@@ -97,20 +97,31 @@ public class Tile : MonoBehaviour {
                         bc.size = new Vector3(1.75f, -0.5f, 1);
                     } else {
                         bc.enabled = false;
-                        GetComponent<Collider>().isTrigger = false;
+                        bc.isTrigger = false;
                     }
 
                 }
                 break;
             case 'W': // Water
-                bc.center = Vector3.zero;
-                bc.size = Vector3.one;
+                bc.center = new Vector3(0,0.25f);
+                bc.size = new Vector3(1,0.5f,1);
                 gameObject.layer = LayerMask.NameToLayer("Water");
                 break;
             case 'V': // Lava
+                bc.center = new Vector3(0, 0.25f);
+                bc.size = new Vector3(1, 0.5f, 1);
+                gameObject.layer = LayerMask.NameToLayer("Lava");
+                break;
+            case 'O': // Solid block that's not a wall
+                bc.center = new Vector3(0, 0.25f);
+                bc.size = new Vector3(1, 0.5f, 1);
+                gameObject.tag = "Static";
+                break;
+            case 'T': // sTairs
+                gameObject.tag = "Stairs";
+                bc.isTrigger = true;
                 bc.center = Vector3.zero;
                 bc.size = Vector3.one;
-                gameObject.layer = LayerMask.NameToLayer("Lava");
                 break;
             default:
                 bc.enabled = false;

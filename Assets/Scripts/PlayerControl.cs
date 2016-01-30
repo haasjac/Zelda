@@ -24,7 +24,7 @@ public class PlayerControl : MonoBehaviour {
 	public Sprite[] link_run_left;
 
 	StateMachine animation_state_machine;
-	StateMachine control_state_machine;
+	public StateMachine control_state_machine;
 	
 	public EntityState current_state = EntityState.NORMAL;
 	public Direction current_direction = Direction.SOUTH;
@@ -181,6 +181,18 @@ public class PlayerControl : MonoBehaviour {
 
                 S.transform.position = link_pos;
                 link_hold = link_pos;
+                break;
+            case "Stairs":
+                control_state_machine.ChangeState(new StateLinkStunned(this));
+                transform.position = new Vector3(19, 53, 0);
+                room_view.transform.position = new Vector3(23.5f, 51f, -10);
+                control_state_machine.ChangeState(new StateLinkNormalMovement(this));
+                break;
+            case "ExitBR":
+                control_state_machine.ChangeState(new StateLinkStunned(this));
+                transform.position = new Vector3(23, 60, 0);
+                room_view.transform.position = new Vector3(23.5f, 61.5f, -10);
+                control_state_machine.ChangeState(new StateLinkNormalMovement(this));
                 break;
         }
     }
