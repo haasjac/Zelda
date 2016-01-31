@@ -170,6 +170,19 @@ public class StateLinkNormalMovement : State {
     }
 }
 
+public class StateLinkStunned : State {
+
+    PlayerControl pc;
+
+    public StateLinkStunned(PlayerControl pc) {
+        this.pc = pc;
+    }
+
+    public override void OnStart() {
+        pc.GetComponent<Rigidbody>().velocity = Vector3.zero;
+    }
+}
+
 public class StateLinkAttack : State {
     PlayerControl pc;
     GameObject weapon_prefab;

@@ -118,13 +118,29 @@ public class Tile : MonoBehaviour {
                 }
                 break;
             case 'W': // Water
-            bc.center = Vector3.zero;
-            bc.size = Vector3.one;
-            gameObject.layer = LayerMask.NameToLayer("Water");
-            break;
+                bc.center = new Vector3(0,0.25f);
+                bc.size = new Vector3(1,0.5f,1);
+                gameObject.layer = LayerMask.NameToLayer("Water");
+                break;
+            case 'V': // Lava
+                bc.center = new Vector3(0, 0.25f);
+                bc.size = new Vector3(1, 0.5f, 1);
+                gameObject.layer = LayerMask.NameToLayer("Lava");
+                break;
+            case 'O': // Solid block that's not a wall
+                bc.center = new Vector3(0, 0.25f);
+                bc.size = new Vector3(1, 0.5f, 1);
+                gameObject.tag = "Static";
+                break;
+            case 'T': // sTairs
+                gameObject.tag = "Stairs";
+                bc.isTrigger = true;
+                bc.center = Vector3.zero;
+                bc.size = Vector3.one;
+                break;
             default:
-            bc.enabled = false;
-            break;
+                bc.enabled = false;
+                break;
         }
 	}	
 }
