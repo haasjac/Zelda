@@ -1,8 +1,17 @@
 ﻿using UnityEngine;
 using System.Collections;
+using UnityEngine.UI;
 
 public enum Direction {NORTH, EAST, SOUTH, WEST};
 public enum EntityState {NORMAL, ATTACKING};
+
+[System.Serializable]
+public class linkSprite {
+    public Sprite[] link_run_down;
+    public Sprite[] link_run_up;
+    public Sprite[] link_run_right;
+    public Sprite[] link_run_left;
+}
 
 public class PlayerControl : MonoBehaviour {
     
@@ -17,13 +26,15 @@ public class PlayerControl : MonoBehaviour {
     public float max_health = 3.0f;
 
     public bool invincible = false;
+    
+    public linkSprite green;
+    public linkSprite blue;
+    public linkSprite red;
+    [HideInInspector]
+    public linkSprite link_sprite;
 
-    public Sprite[] link_run_down;
-	public Sprite[] link_run_up;
-	public Sprite[] link_run_right;
-	public Sprite[] link_run_left;
 
-	StateMachine animation_state_machine;
+    StateMachine animation_state_machine;
 	public StateMachine control_state_machine;
 	
 	public EntityState current_state = EntityState.NORMAL;
@@ -37,6 +48,9 @@ public class PlayerControl : MonoBehaviour {
     public GameObject bow_prefab;
     public GameObject arrow_prefab;
     public GameObject bomb_prefab;
+    public GameObject cc_blue_prefab;
+    public GameObject cc_red_prefab;
+    public bool has_red = false;
 
     public GameObject room_view;
     public GameObject stagger_block;
@@ -53,6 +67,9 @@ public class PlayerControl : MonoBehaviour {
 
     public GameObject map_ref;
 
+    public Image fade;
+    public float fade_speed = 1;
+
     [HideInInspector]
     public bool a_active = true;
     [HideInInspector]
@@ -67,8 +84,10 @@ public class PlayerControl : MonoBehaviour {
         }
         S = this;
 
+        link_sprite = green;
+
         animation_state_machine = new StateMachine();
-        animation_state_machine.ChangeState(new StateIdleWithSprite(this, GetComponent<SpriteRenderer>(), link_run_down[0]));
+        animation_state_machine.ChangeState(new StateIdleWithSprite(this, GetComponent<SpriteRenderer>(), link_sprite.link_run_down[0]));
         control_state_machine = new StateMachine();
         control_state_machine.ChangeState(new StateLinkNormalMovement(this));
 	}
@@ -184,12 +203,27 @@ public class PlayerControl : MonoBehaviour {
                 break;
             case "Stairs":
                 control_state_machine.ChangeState(new StateLinkStunned(this));
+                /*for(float i = 0; i < fade_speed; i += Time.deltaTime) {
+                    print(i);
+                    Color temp = fade.color;
+                    temp.a = (i / fade_speed) * 255;
+                    fade.color = temp;
+                }*/
                 transform.position = new Vector3(19, 53, 0);
-                room_view.transform.position = new Vector3(23.5f, 51f, -10);
+                room_view.transform.position = new Vector3(23.5f, 50.5f, -10);
+                /*for (float i = 0; i < fade_speed; i += Time.deltaTime) {
+                    Color temp = fade.color;
+                    temp.a = 255 - (i / fade_speed) * 255;
+                    fade.color = temp;
+                }
+                Color c = fade.color;
+                c.a = 0;
+                fade.color = c;*/
                 control_state_machine.ChangeState(new StateLinkNormalMovement(this));
                 break;
             case "ExitBR":
                 control_state_machine.ChangeState(new StateLinkStunned(this));
+
                 transform.position = new Vector3(23, 60, 0);
                 room_view.transform.position = new Vector3(23.5f, 61.5f, -10);
                 control_state_machine.ChangeState(new StateLinkNormalMovement(this));
@@ -200,6 +234,16 @@ public class PlayerControl : MonoBehaviour {
     void OnCollisionEnter(Collision coll) {
 
         switch (coll.gameObject.tag) {
+            case "Water":
+                if (link_sprite == blue) {
+                    coll.collider.isTrigger = true;
+                }
+                break;
+            case "Lava":
+                if (link_sprite == red) {
+                    coll.collider.isTrigger = true;
+                }
+                break;
             case "Enemy":
                 control_state_machine.ChangeState(new StateDamaged(this, coll.contacts[0].normal, 0.5f));
                 break;
@@ -268,6 +312,17 @@ public class PlayerControl : MonoBehaviour {
                     coll.gameObject.tag = "Door";
                     
                 }
+                break;
+        }
+    }
+
+    void OnTriggerExit(Collider coll) {
+        switch (coll.gameObject.tag) {
+            case "Water":
+                coll.isTrigger = false;
+                break;
+            case "Lava":
+                coll.isTrigger = false;
                 break;
         }
     }

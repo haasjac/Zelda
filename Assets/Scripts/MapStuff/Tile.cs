@@ -105,11 +105,13 @@ public class Tile : MonoBehaviour {
             case 'W': // Water
                 bc.center = new Vector3(0,0.25f);
                 bc.size = new Vector3(1,0.5f,1);
+                gameObject.tag = "Water";
                 gameObject.layer = LayerMask.NameToLayer("Water");
                 break;
             case 'V': // Lava
                 bc.center = new Vector3(0, 0.25f);
                 bc.size = new Vector3(1, 0.5f, 1);
+                gameObject.tag = "Lava";
                 gameObject.layer = LayerMask.NameToLayer("Lava");
                 break;
             case 'O': // Solid block that's not a wall

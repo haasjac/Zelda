@@ -56,6 +56,13 @@ public class StateHudPaused : State {
                     PlayerControl.S.selected_weapon_prefab = PlayerControl.S.bow_prefab;
                     PlayerControl.S.selected_projectile_prefab = PlayerControl.S.arrow_prefab;
                     break;
+                case 3:
+                    PlayerControl.S.selected_weapon_prefab = null;
+                    if (PlayerControl.S.has_red)
+                        PlayerControl.S.selected_projectile_prefab = PlayerControl.S.cc_red_prefab;
+                    else
+                        PlayerControl.S.selected_projectile_prefab = PlayerControl.S.cc_blue_prefab;
+                    break;
             }
         }
     }
