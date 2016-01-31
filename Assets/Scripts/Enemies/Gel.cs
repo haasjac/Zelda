@@ -20,6 +20,9 @@ public class Gel : MonoBehaviour {
 	
 	// Update is called once per frame
 	void FixedUpdate () {
+        //if you're not on camera, do nothing
+        if (!Utils.check_movement(direction, this.gameObject, cam))
+            return;
 
         if (!rest) {
             cooldown += Time.deltaTime;

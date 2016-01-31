@@ -69,35 +69,50 @@ public class Tile : MonoBehaviour {
                 gameObject.tag = "Static";
                 bc.center = Vector3.zero;
                 bc.size = Vector3.one;
+                bc.isTrigger = false;
                 break;
             case 'L': //Locked
                 gameObject.tag = "Locked";
+                bc.size = Vector3.one;
+                bc.center = Vector3.zero;
+                bc.isTrigger = false;
+                if (this.tileNum == 101)
+                    gameObject.name = "locked_R";
+                else if (this.tileNum == 106)
+                    gameObject.name = "locked_L";
+                else if (this.tileNum == 80)
+                    gameObject.name = "locked_TL";
+                else if (this.tileNum == 81)
+                    gameObject.name = "locked_TR";
                 break;
             case 'D': //Door
                 gameObject.tag = "Door";
-                GetComponent<Collider>().isTrigger = true;
+                bc.isTrigger = true;
                 //which door is it?
-                if (this.tileNum == 48) {
+                if (this.tileNum == 48) {           //right
                     bc.center = new Vector3(0.5f, 0, 0);
                     bc.size = new Vector3(0.5f, 1, 1);
-                } else if (this.tileNum == 51) {
+                }
+                else if (this.tileNum == 51) {      //left
                     bc.center = new Vector3(-0.5f, 0, 0);
                     bc.size = new Vector3(-0.5f, 1, 1);
-                } else if (this.tileNum == 26 || this.tileNum == 27) {
+                }
+                else if (this.tileNum == 26 || this.tileNum == 27) {        //bottom left / bottom right
                     if (this.tileNum == 27) {
                         bc.center = new Vector3(-0.5f, -0.33f, 0);
                         bc.size = new Vector3(1.75f, -0.5f, 1);
                     } else {
                         bc.enabled = false;
-                        GetComponent<Collider>().isTrigger = false;
+                        bc.isTrigger = false;
                     }
-                } else if (this.tileNum == 92 || this.tileNum == 93) {
+                }
+                else if (this.tileNum == 92 || this.tileNum == 93) {        //top left / top right
                     if (this.tileNum == 93) {
                         bc.center = new Vector3(-0.5f, 0.33f, 0);
                         bc.size = new Vector3(1.75f, -0.5f, 1);
                     } else {
                         bc.enabled = false;
-                        GetComponent<Collider>().isTrigger = false;
+                        bc.isTrigger = false;
                     }
 
                 }

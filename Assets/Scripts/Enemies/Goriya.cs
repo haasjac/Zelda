@@ -48,7 +48,16 @@ public class Goriya : Gel {
 
         //instantiate boomerang and hurl in current direction
         GameObject batarang = Instantiate<GameObject>(boomerang);       //debug boomerang behaviour
+        batarang.GetComponent<goriya_boomer>().direction = direction;
         batarang.transform.position = pos;
+
+        //rotate boomerang appropriately
+        if(direction == Direction.NORTH)
+            batarang.transform.Rotate(Vector3.forward * -90);
+        else if (direction == Direction.SOUTH)
+            batarang.transform.Rotate(Vector3.forward * -270);
+        else if (direction == Direction.EAST)
+            batarang.transform.Rotate(Vector3.forward * -180);
 
         attack_cooldown = 5.0f;
     }

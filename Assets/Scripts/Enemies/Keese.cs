@@ -3,6 +3,7 @@ using System.Collections;
 
 public class Keese : MonoBehaviour {
 
+    public GameObject cam;
     public Direction horizontal = Direction.NORTH;
     public Direction vertical = Direction.EAST;
     public float movement_speed = 3f;
@@ -21,6 +22,9 @@ public class Keese : MonoBehaviour {
 	
 	// Update is called once per frame
 	void FixedUpdate () {
+        if (!Utils.check_movement(horizontal, this.gameObject, cam))
+            return;
+
         //cooldown update
         if (!rest) {
             cooldown += Time.deltaTime;

@@ -45,6 +45,7 @@ public class PlayerControl : MonoBehaviour {
     public float push_cooldown = 0;
     public float cam_shift = 0;
     public Vector3 link_hold = Vector3.zero;
+    public float link_stun = 0.0f;
 
     public Sprite sprite_tl;
     public Sprite sprite_tr;
@@ -123,6 +124,10 @@ public class PlayerControl : MonoBehaviour {
             //keep player still
             transform.position = link_hold;
         }
+        else if(link_stun > 0.0f) {
+            link_stun -= Time.deltaTime;
+            transform.position = link_hold;
+        }
     }
 
     void OnTriggerEnter(Collider coll) {
@@ -152,8 +157,16 @@ public class PlayerControl : MonoBehaviour {
                 Destroy(coll.gameObject);
                 break;
             case "Enemy":   //for the sake of debugging blade traps
+                //if (!invincible)
+                //    health -= 0.5f;
+                //break;
+            case "EnemyProjectile":
                 if (!invincible)
                     health -= 0.5f;
+                break;
+            case "Enemy_boomerang":
+                link_hold = transform.position;
+                link_stun = 2.0f;
                 break;
             case "Door":
                 if (cam_shift > 0.0f)
@@ -256,6 +269,13 @@ public class PlayerControl : MonoBehaviour {
                     coll.gameObject.tag = "Door";
                     
                 }
+                break;
+        }
+    }
+
+    void OnCollisionStay(Collision coll) {
+        switch (coll.gameObject.tag) {
+            case "Pushable":
                 break;
         }
     }

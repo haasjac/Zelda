@@ -34,7 +34,7 @@ public class orb_projectile : MonoBehaviour {
         switch (coll.gameObject.tag) {
             case "Enemy":
                 break;
-            default:
+            case "Static":
                 Destroy(this.gameObject);
                 break;
         }

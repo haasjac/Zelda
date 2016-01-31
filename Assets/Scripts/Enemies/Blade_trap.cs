@@ -60,7 +60,7 @@ public class Blade_trap : MonoBehaviour {
                         dist_forward -= shift;
                 }
                 else {
-                    shift /= 3;
+                    shift /= 4;
                     if (shift >= dist_back) {
                         shift = dist_back;
                         dist_back = 0.0f;

@@ -3,40 +3,56 @@ using System.Collections;
 
 public class Aquamentus : MonoBehaviour {
     //TACTICS: -attack at every interval
-    //         -slowly approach link
-    //         -back up a little if damaged
+    //         -slowl move back and forth (horizontally)
+
+    //camera tracking
+    public GameObject cam;
+
+    //attack variables
     public GameObject link;
     public GameObject orb;
-    //public GameObject middle;
-    //public GameObject left;
-    //public GameObject right;
     public Vector3 target_middle;
     public Vector3 target_left;
     public Vector3 target_right;
+    public float attack_cooldown = 2f;
+
+    //movement variables
     public int health = 10;
+    public float distance = 2f;
     public float movement_speed = 1f;
-//    public float flee_cooldown = 0.0f;
-//    public float attack_cooldown = 0.0f;
+    public float stun = 0.0f;                                   //can aquamentus be stunned?
     public Direction horizontal = Direction.WEST;
-    public Direction vertical = Direction.NORTH;
 
     // Use this for initialization
     void Start () {
-        InvokeRepeating("attack", 2f, 2.5f);
+
     }
 	
 	// Update is called once per frame
 	void FixedUpdate () {
+        if (!Utils.on_camera(this.gameObject, cam))
+            return;
+
+        if(stun > 0.0f) {
+            stun -= Time.deltaTime;
+            return;
+        }
 
         //direction update
-        direction_update();
+        if(distance <= 0.0f) {
+            distance = 2f;
+            if (horizontal == Direction.EAST)
+                horizontal = Direction.WEST;
+            else
+                horizontal = Direction.EAST;
+        }
 
         //attack and movement updates
-        //if (attack_cooldown <= 0.0f) { 
-        //    attack();
-        //    attack_cooldown = 1f;
-        //}
-//        else {
+        if (attack_cooldown <= 0.0f) {
+            attack();
+            attack_cooldown = 2.5f;
+        }
+        else {
             Vector3 pos = this.transform.position;
             float shift = Time.deltaTime * movement_speed;
             //move and decrease cooldown
@@ -45,14 +61,10 @@ public class Aquamentus : MonoBehaviour {
             else if (horizontal == Direction.WEST)
                 pos.x -= shift;
 
-            if (vertical == Direction.NORTH)
-                pos.y += shift / 2;
-            else if (vertical == Direction.SOUTH)
-                pos.y -= shift / 2;
-
-//            attack_cooldown -= Time.deltaTime;
+            distance -= shift;
+            attack_cooldown -= Time.deltaTime;
             this.transform.position = pos;
-//        }
+        }
 	}
 
 
@@ -87,20 +99,6 @@ public class Aquamentus : MonoBehaviour {
         right.GetComponent<orb_projectile>().target = target_right;
     }
 
-    void direction_update() {
-        Vector3 link_pos = link.transform.position;
-        Vector3 pos = this.transform.position;
-
-        if (link_pos.x > pos.x)
-            horizontal = Direction.EAST;
-        else if (link_pos.x < pos.x)
-            horizontal = Direction.WEST;
-
-        if (link_pos.y > pos.y)
-            vertical = Direction.NORTH;
-        else if (link_pos.y < pos.y)
-            vertical = Direction.SOUTH;
-    }
 
     void OnCollisionEnter(Collision coll) {
         switch (coll.gameObject.tag) {
@@ -108,6 +106,9 @@ public class Aquamentus : MonoBehaviour {
                 health -= 1;
                 if (health <= 0)
                     Destroy(this.gameObject);
+                break;
+            case "Boomerang":
+                stun = 2.5f;
                 break;
         }
     }
