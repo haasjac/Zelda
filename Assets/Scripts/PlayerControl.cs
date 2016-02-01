@@ -237,7 +237,7 @@ public class PlayerControl : MonoBehaviour {
             case "ExitBR":
                 control_state_machine.ChangeState(new StateLinkStunned(this));
 
-                transform.position = new Vector3(23, 60, 0);
+                transform.position = new Vector3(21, 59, 0);
                 room_view.transform.position = new Vector3(23.5f, 61.5f, -10);
                 control_state_machine.ChangeState(new StateLinkNormalMovement(this));
                 break;
@@ -341,11 +341,14 @@ public class PlayerControl : MonoBehaviour {
         }
     }
 
-<<<<<<< HEAD
     void OnCollisionStay(Collision coll) {
         switch (coll.gameObject.tag) {
             case "Pushable":
-=======
+                break;
+        }
+    }
+
+
     void OnTriggerExit(Collider coll) {
         switch (coll.gameObject.tag) {
             case "Water":
@@ -353,7 +356,6 @@ public class PlayerControl : MonoBehaviour {
                 break;
             case "Lava":
                 coll.isTrigger = false;
->>>>>>> 5be05cff5bc0eb6b14034c46108dd3bf6a534ed6
                 break;
         }
     }
