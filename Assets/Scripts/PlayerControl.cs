@@ -61,8 +61,8 @@ public class PlayerControl : MonoBehaviour {
     public Vector3 link_hold = Vector3.zero;
     public float link_stun = 0.0f;
 
-    public Sprite sprite_tl;
-    public Sprite sprite_tr;
+//    public Sprite sprite_tl;
+    public Sprite sprite_t;
     public Sprite sprite_l;
     public Sprite sprite_r;
 
@@ -330,29 +330,29 @@ public class PlayerControl : MonoBehaviour {
                     //    tile_coll.size = new Vector3(-0.5f, 1, 1);
                     //}
                     BoxCollider locked = coll.gameObject.GetComponent<BoxCollider>();
-                    if (coll.gameObject.name == "locked_TL")
+/*                   if (coll.gameObject.name == "locked_TL")
                     {    //upper-left
                         //no more solid collisions
                         locked.center = new Vector3(0, 3 / 6f, 0);
                         locked.size = Vector3.zero;
                         coll.gameObject.GetComponent<SpriteRenderer>().sprite = sprite_tl;
                     }
-                    else if (coll.gameObject.name == "locked_TR")
+                    else*/  if (coll.gameObject.name == "locked_T")
                     {    //upper-right
-                        locked.center = new Vector3(-0.5f / 6f, 0.33f / 6f, 0);
-                        locked.size = new Vector3(1.75f / 6f, 0.5f / 6f, 1);
-                        coll.gameObject.GetComponent<SpriteRenderer>().sprite = sprite_tr;
+                        locked.center = new Vector3(0, 0.33f, 0);
+                        locked.size = new Vector3(1.75f, 0.5f, 1);
+                        coll.gameObject.GetComponent<SpriteRenderer>().sprite = sprite_t;
                     }
                     else if (coll.gameObject.name == "locked_R")
                     {    //right
-                        locked.center = new Vector3(0.5f / 6f, 0, 0);
-                        locked.size = new Vector3(0.5f / 6f, 1 / 6f, 1);
+                        locked.center = new Vector3(0.5f, 0, 0);
+                        locked.size = new Vector3(0.5f, 1, 1);
                         coll.gameObject.GetComponent<SpriteRenderer>().sprite = sprite_r;
                     }
                     else if (coll.gameObject.name == "locked_L")
                     {    //left
-                        locked.center = new Vector3(-0.5f / 6f, 0, 0);
-                        locked.size = new Vector3(-0.5f / 6f, 1 / 6f, 1);
+                        locked.center = new Vector3(-0.5f, 0, 0);
+                        locked.size = new Vector3(-0.5f, 1, 1);
                         coll.gameObject.GetComponent<SpriteRenderer>().sprite = sprite_l;
                     }
 

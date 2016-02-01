@@ -87,7 +87,26 @@ public class Room_tracker : MonoBehaviour {
             //change sprite, tag, and collider
             door.tag = "Door";
             door.GetComponent<SpriteRenderer>().sprite = door_sprite;
-            door.GetComponent<BoxCollider>().enabled = false;
+            BoxCollider locked = door.GetComponent<BoxCollider>();
+            if (door.name == "locked_T")
+            {    //upper-right
+                locked.center = new Vector3(-0.5f, 0.33f, 0);
+                locked.size = new Vector3(1.75f, 0.5f, 1);
+            }
+            else if (door.name == "locked_R" || door.name == "trigger_lock_right")
+            {    //right
+                locked.center = new Vector3(0.5f, 0, 0);
+                locked.size = new Vector3(0.5f, 1, 1);
+            }
+            else if (door.name == "locked_L" || door.name == "trigger_lock_left")
+            {    //left
+                locked.center = new Vector3(-0.5f, 0, 0);
+                locked.size = new Vector3(-0.5f, 1, 1);;
+            }
+
+            door.GetComponent<BoxCollider>().isTrigger = true;
+            door.tag = "Door";
+            //door.GetComponent<BoxCollider>().enabled = false;
         }
     }
 
