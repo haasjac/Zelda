@@ -273,12 +273,12 @@ public class StateDamaged : State {
     float damage;
     float timer;
     Color pc_color;
-    float force;
+    //float force;
 
-    public StateDamaged(PlayerControl pc, Vector3 dir, float damage, float cooldown = 2f, float force = 3000f) {
+    public StateDamaged(PlayerControl pc, Vector3 dir, float damage, float cooldown = 2f) {
         this.pc = pc;
         this.cooldown = cooldown;
-        this.force = force;
+        //this.force = force;
         this.dir = dir;
         this.dir.z = 0;
         this.damage = damage;

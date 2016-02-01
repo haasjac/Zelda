@@ -129,6 +129,10 @@ public class PlayerControl : MonoBehaviour {
         if (control_state_machine.IsFinished()) {
             control_state_machine.ChangeState(new StateLinkNormalMovement(this));
         }
+
+        if (Input.GetKeyDown(KeyCode.Escape)) {
+            Application.LoadLevel("Main_Menu");
+        }
     }
 
     void FixedUpdate() {
@@ -198,13 +202,47 @@ public class PlayerControl : MonoBehaviour {
                 key_count++;
                 Destroy(coll.gameObject);
                 break;
-            case "Enemy":   //for the sake of debugging blade traps
-                //if (!invincible)
-                //    health -= 0.5f;
-                //break;
+            case "Enemy":
+                if (!invincible) {
+                    float diffx = coll.transform.position.x - transform.position.x;
+                    float diffy = coll.transform.position.y - transform.position.y;
+                    if (Mathf.Abs(diffx) > Mathf.Abs(diffy))
+                        diffy = 0;
+                    else
+                        diffx = 0;
+                    Vector3 norm = new Vector3(diffx, diffy, 0).normalized;
+                    control_state_machine.ChangeState(new StateDamaged(this, -norm, 0.5f));
+                }
+                break;
             case "EnemyProjectile":
-                if (!invincible)
-                    health -= 0.5f;
+                if (!invincible) {
+                    print("hit");
+                    bool shield = false;
+                    float diffx = coll.transform.position.x - transform.position.x;
+                    float diffy = coll.transform.position.y - transform.position.y;
+                    if (Mathf.Abs(diffx) > Mathf.Abs(diffy))
+                        diffy = 0;
+                    else
+                        diffx = 0;
+                    Vector3 norm = new Vector3(diffx, diffy, 0).normalized;
+                    if (current_state == EntityState.NORMAL) {
+                        
+                        if (norm == Vector3.up && current_direction == Direction.NORTH)
+                            shield = true;
+                        if (norm == Vector3.right && current_direction == Direction.EAST)
+                            shield = true;
+                        if (norm == Vector3.down && current_direction == Direction.SOUTH)
+                            shield = true;
+                        if (norm == Vector3.left && current_direction == Direction.WEST)
+                            shield = true;
+                    }
+                    if (!shield)
+                        control_state_machine.ChangeState(new StateDamaged(this, -norm, 0.5f));
+                    else {
+                        Destroy(coll.gameObject);
+                    }
+                    print(shield);
+                }
                 break;
             case "Enemy_boomerang":
                 link_hold = transform.position;
@@ -268,7 +306,7 @@ public class PlayerControl : MonoBehaviour {
     }
 
     void OnCollisionEnter(Collision coll) {
-
+        
         switch (coll.gameObject.tag) {
             case "Water":
                 if (link_sprite == blue) {
@@ -281,22 +319,25 @@ public class PlayerControl : MonoBehaviour {
                 }
                 break;
             case "Enemy":
-                control_state_machine.ChangeState(new StateDamaged(this, coll.contacts[0].normal, 0.5f));
+                if(!invincible)
+                    control_state_machine.ChangeState(new StateDamaged(this, coll.contacts[0].normal, 0.5f));
                 break;
             case "EnemyProjectile":
-                bool shield = false;
-                if (GetComponent<Rigidbody>().velocity == Vector3.zero) {
-                    if (coll.contacts[0].normal == Vector3.up && current_direction == Direction.NORTH)
-                        shield = true;
-                    if (coll.contacts[0].normal == Vector3.right && current_direction == Direction.EAST)
-                        shield = true;
-                    if (coll.contacts[0].normal == Vector3.down && current_direction == Direction.SOUTH)
-                        shield = true;
-                    if (coll.contacts[0].normal == Vector3.left && current_direction == Direction.WEST)
-                        shield = true;
+                if (!invincible) {
+                    bool shield = false;
+                    if (GetComponent<Rigidbody>().velocity == Vector3.zero) {
+                        if (coll.contacts[0].normal == Vector3.up && current_direction == Direction.NORTH)
+                            shield = true;
+                        if (coll.contacts[0].normal == Vector3.right && current_direction == Direction.EAST)
+                            shield = true;
+                        if (coll.contacts[0].normal == Vector3.down && current_direction == Direction.SOUTH)
+                            shield = true;
+                        if (coll.contacts[0].normal == Vector3.left && current_direction == Direction.WEST)
+                            shield = true;
+                    }
+                    if (!shield)
+                        control_state_machine.ChangeState(new StateDamaged(this, coll.contacts[0].normal, 0.5f));
                 }
-                if (!shield)
-                    control_state_machine.ChangeState(new StateDamaged(this, coll.contacts[0].normal, 0.5f));
                 break;
             case "Pushable":
                 if (this.gameObject.tag == "Player") {
