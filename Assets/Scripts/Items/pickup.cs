@@ -8,6 +8,7 @@ public class pickup : MonoBehaviour {
     public Image cc = null;
     public Image b_field = null;
     public bool red = false;
+    public GameObject[] appear_on_pickup;
 
     // Use this for initialization
     void Start() {
@@ -24,6 +25,9 @@ public class pickup : MonoBehaviour {
             Hud.S.has_weapon[list_num] = true;
             Hud.S.weapons[list_num].SetActive(true);
             Destroy(this.gameObject);
+            foreach (GameObject go in appear_on_pickup) {
+                go.SetActive(true);
+            }
             if (red) {
                 cc.sprite = PlayerControl.S.cc_red_prefab.GetComponent<SpriteRenderer>().sprite;
                 PlayerControl.S.has_red = true;
