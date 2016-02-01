@@ -280,6 +280,7 @@ public class StateDamaged : State {
         this.cooldown = cooldown;
         this.force = force;
         this.dir = dir;
+        this.dir.z = 0;
         this.damage = damage;
     }
 
