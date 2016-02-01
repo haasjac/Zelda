@@ -12,6 +12,7 @@ public class Room_tracker : MonoBehaviour {
     public Sprite door_sprite;
 
     public bool all_clear = true;
+    public bool triggered = false;
     public bool reset_on_enter = false;
 
     public Vector3 block_pos = Vector3.zero;
@@ -41,13 +42,16 @@ public class Room_tracker : MonoBehaviour {
                 break;
             case Condition.OnKillSpawn:
                 for (int i = 0; i < enemies.Length; i++) {
-                    if (enemies[i] != null)
+                    if (enemies[i] != null) { 
                         all_clear = false;
+                        break;
+                    }
                     else
                         all_clear = true;
                 }
                 //spawn the object in the center of the room
-                if (all_clear) {
+                if (all_clear && !triggered) {
+                    triggered = true;
                     Instantiate<GameObject>(focus);
                     focus.transform.position = this.transform.position;
                 }

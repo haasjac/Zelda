@@ -4,6 +4,7 @@ using System.Collections;
 public class Gel : MonoBehaviour {
 
     public GameObject cam;
+    public Vector3 origin;
 
     public float movement_speed = 1f;
     public float distance = 0.0f;
@@ -15,14 +16,17 @@ public class Gel : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
+        origin = this.transform.position;
         target_cooldown = Random.Range(0.5f, 3.0f);
 	}
 	
 	// Update is called once per frame
 	void FixedUpdate () {
-        //if you're not on camera, do nothing
-        if (!Utils.check_movement(direction, this.gameObject, cam))
+        //if you're not on camera, do nothing and reset position
+        if (!Utils.check_movement(direction, this.gameObject, cam)) {
+            this.transform.position = origin;
             return;
+        }
 
         if (!rest) {
             cooldown += Time.deltaTime;
@@ -101,6 +105,7 @@ public class Gel : MonoBehaviour {
 
     void OnCollisionEnter(Collision coll) {
         switch (coll.gameObject.tag) {
+            case "Boomerang":
             case "PlayerProjectile":
                 health -= 1;
                 if (health <= 0)

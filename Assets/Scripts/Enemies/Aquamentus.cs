@@ -79,9 +79,9 @@ public class Aquamentus : MonoBehaviour {
             link_pos.x += 10f;
 
         target_middle = link_pos;
-        link_pos.y += 3f;
+        link_pos.y += 6f;
         target_right = link_pos;
-        link_pos.y -= 6f;
+        link_pos.y -= 12f;
         target_left = link_pos;
 
         //instance location

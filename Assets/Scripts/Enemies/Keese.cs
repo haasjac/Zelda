@@ -4,6 +4,7 @@ using System.Collections;
 public class Keese : MonoBehaviour {
 
     public GameObject cam;
+    public Vector3 origin;
     public Direction horizontal = Direction.NORTH;
     public Direction vertical = Direction.EAST;
     public float movement_speed = 3f;
@@ -17,13 +18,16 @@ public class Keese : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
-        target_cooldown = Random.Range(5, 15);
+        origin = this.transform.position;
+        target_cooldown = Random.Range(8, 15);
 	}
 	
 	// Update is called once per frame
 	void FixedUpdate () {
-        if (!Utils.check_movement(horizontal, this.gameObject, cam))
+        if (!Utils.check_movement(horizontal, this.gameObject, cam)) {
+            this.transform.position = origin;
             return;
+        }
 
         //cooldown update
         if (!rest) {
@@ -98,6 +102,7 @@ public class Keese : MonoBehaviour {
                 else if (vertical == Direction.SOUTH)
                     vertical = Direction.NORTH;
                 break;
+            case "Boomerang":
             case "PlayerProjectile":
                 health -= 1;
                 if (health <= 0)

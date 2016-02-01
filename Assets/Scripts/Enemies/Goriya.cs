@@ -5,6 +5,7 @@ public class Goriya : Gel {
 
     public GameObject boomerang;
     public float attack_cooldown = 0.0f;
+    public float stun = 0.0f;
 
     // Use this for initialization
     void Start() {

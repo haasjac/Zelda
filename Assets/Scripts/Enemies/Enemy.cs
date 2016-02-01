@@ -3,7 +3,8 @@ using System.Collections;
 
 public class Enemy : MonoBehaviour
 {
-    public float movement_speed = 3f;
+    public GameObject cam;
+    public float movement_speed = 2f;
     public float change_chance = 5;     //percent change to change direction
     public Direction current_dir = Direction.NORTH;
     public float target = 0f;
@@ -25,28 +26,40 @@ public class Enemy : MonoBehaviour
 
     public void FixedUpdate()
     {
+        //if you're off camera, do nothing
+        if (!Utils.on_camera(this.gameObject, cam))
+            return;
+
+        //if you've finished moving, choose a new direction and distance
         if (target <= 0.0f)
         {
             change_dir();
-            target = Random.Range(0, 3);
+            target = Mathf.FloorToInt(Random.Range(1, 6));
+            //if you will run into something, choose a new path
+            if (!sonar(current_dir, this.gameObject, target))
+                target = 0.0f;
         }
-
-        float move = Time.deltaTime;
-        if (move > target)
-            move = target;
-        target -= move;
-
-        Vector3 pos = this.transform.position;
-        if (current_dir == Direction.NORTH)
-            pos.y += move * movement_speed;
-        else if (current_dir == Direction.SOUTH)
-            pos.y -= move * movement_speed;
-        else if (current_dir == Direction.EAST)
-            pos.x += move * movement_speed;
         else
-            pos.x -= move * movement_speed;
+        {
 
-        this.transform.position = pos;
+            //otherwise, move
+            float move = Time.deltaTime;
+            if (move > target)
+                move = target;
+            target -= move;
+
+            Vector3 pos = this.transform.position;
+            if (current_dir == Direction.NORTH)
+                pos.y += move * movement_speed;
+            else if (current_dir == Direction.SOUTH)
+                pos.y -= move * movement_speed;
+            else if (current_dir == Direction.EAST)
+                pos.x += move * movement_speed;
+            else
+                pos.x -= move * movement_speed;
+
+            this.transform.position = pos;
+        }
     }
 
     public void change_dir()
@@ -68,18 +81,20 @@ public class Enemy : MonoBehaviour
         //if you collide with a solid object, change direction
         switch (coll.gameObject.tag)
         {
-            case "Solid":
+            case "Static":
 
             case "Locked":
-                target = 0.0f;
-                if (current_dir == Direction.NORTH)
-                    current_dir = Direction.SOUTH;
-                else if (current_dir == Direction.SOUTH)
-                    current_dir = Direction.NORTH;
-                else if (current_dir == Direction.EAST)
-                    current_dir = Direction.WEST;
-                else
-                    current_dir = Direction.EAST;
+                target = 1.0f;
+                current_dir = change_direction(current_dir);
+                //target = 0.0f;
+                //if (current_dir == Direction.NORTH)
+                //    current_dir = Direction.EAST;
+                //else if (current_dir == Direction.EAST)
+                //    current_dir = Direction.SOUTH;
+                //else if (current_dir == Direction.SOUTH)
+                //    current_dir = Direction.WEST;
+                //else
+                //    current_dir = Direction.NORTH;
                 break;
             default:
                 break;
@@ -92,20 +107,70 @@ public class Enemy : MonoBehaviour
         {
             case "Bounds":
                 print("bounds encounter");
-                if (current_dir == Direction.NORTH)
-                    current_dir = Direction.SOUTH;
-                else if (current_dir == Direction.SOUTH)
-                    current_dir = Direction.NORTH;
-                else if (current_dir == Direction.EAST)
-                    current_dir = Direction.WEST;
-                else
-                    current_dir = Direction.EAST;
+                target = 1.0f;
+                current_dir = change_direction(current_dir);
+                //if (current_dir == Direction.NORTH)
+                //    current_dir = Direction.SOUTH;
+                //else if (current_dir == Direction.SOUTH)
+                //    current_dir = Direction.NORTH;
+                //else if (current_dir == Direction.EAST)
+                //    current_dir = Direction.WEST;
+                //else
+                //    current_dir = Direction.EAST;
                 break;
             case "PlayerProjectile":
                 health -= 1;
                 if (health <= 0)
                     Destroy(this.gameObject);
                 break;
+            case "Static":
+
+            case "Locked":
+                target = 1.0f;
+                current_dir = change_direction(current_dir);
+                //if (current_dir == Direction.NORTH)
+                //    current_dir = Direction.EAST;
+                //else if (current_dir == Direction.EAST)
+                //    current_dir = Direction.SOUTH;
+                //else if (current_dir == Direction.SOUTH)
+                //    current_dir = Direction.WEST;
+                //else
+                //    current_dir = Direction.NORTH;
+                break;
+            default:
+                break;
         }
+    }
+
+    public Direction change_direction(Direction dir) {
+        if (dir == Direction.NORTH)
+            return Direction.EAST;
+        else if (dir == Direction.EAST)
+            return Direction.SOUTH;
+        else if (dir == Direction.SOUTH)
+            return Direction.WEST;
+        else
+            return Direction.NORTH;
+    }
+
+    public bool sonar(Direction dir, GameObject thing, float dist) {
+        //return true if object is hit
+        if (dir == Direction.NORTH) {
+            Vector3 direction = new Vector3(0, 1, 0);
+            return Physics.Raycast(thing.transform.position, direction, dist);
+        }
+        else if (dir == Direction.EAST) {
+            Vector3 direction = new Vector3(1, 0, 0);
+            return Physics.Raycast(thing.transform.position, direction, dist);
+        }
+        else if (dir == Direction.SOUTH) {
+            Vector3 direction = new Vector3(0, -1, 0);
+            return Physics.Raycast(thing.transform.position, direction, dist);
+        }
+        else {
+            Vector3 direction = new Vector3(-1, 0, 0);
+            return Physics.Raycast(thing.transform.position, direction, dist);
+        }
+
     }
 }
