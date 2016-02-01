@@ -119,11 +119,11 @@ public class Tile : MonoBehaviour {
                     if (this.tileNum == 42) {           //right
                         bc.center = new Vector3(0.5f, 0, 0);
                         bc.size = new Vector3(0.5f, 1, 1);
-                    } else if (this.tileNum == 45) {      //left
+                    } else if (this.tileNum == 45 || this.tileNum == 105) {      //left
                         bc.center = new Vector3(-0.5f, 0, 0);
                         bc.size = new Vector3(-0.5f, 1, 1);
                     } else if (this.tileNum == 93 || this.tileNum == 94) {        //bottom left / bottom right
-                        if (this.tileNum == 93) {
+                        if (this.tileNum == 94) {
                             bc.center = new Vector3(-0.5f, -0.33f, 0);
                             bc.size = new Vector3(1.75f, -0.5f, 1);
                         } else {
@@ -131,7 +131,7 @@ public class Tile : MonoBehaviour {
                             bc.isTrigger = false;
                         }
                     } else if (this.tileNum == 97 || this.tileNum == 98) {        //top left / top right
-                        if (this.tileNum == 97) {
+                        if (this.tileNum == 98) {
                             bc.center = new Vector3(-0.5f, 0.33f, 0);
                             bc.size = new Vector3(1.75f, -0.5f, 1);
                         } else {
