@@ -248,7 +248,19 @@ public class PlayerControl : MonoBehaviour {
                 control_state_machine.ChangeState(new StateDamaged(this, coll.contacts[0].normal, 0.5f));
                 break;
             case "EnemyProjectile":
-                control_state_machine.ChangeState(new StateDamaged(this, coll.contacts[0].normal, 0.5f));
+                bool shield = false;
+                if (GetComponent<Rigidbody>().velocity == Vector3.zero) {
+                    if (coll.contacts[0].normal == Vector3.up && current_direction == Direction.NORTH)
+                        shield = true;
+                    if (coll.contacts[0].normal == Vector3.right && current_direction == Direction.EAST)
+                        shield = true;
+                    if (coll.contacts[0].normal == Vector3.down && current_direction == Direction.SOUTH)
+                        shield = true;
+                    if (coll.contacts[0].normal == Vector3.left && current_direction == Direction.WEST)
+                        shield = true;
+                }
+                if (!shield)
+                    control_state_machine.ChangeState(new StateDamaged(this, coll.contacts[0].normal, 0.5f));
                 break;
             case "Pushable":
                 if (this.gameObject.tag == "Player") {
