@@ -23,6 +23,8 @@ public class Utils : MonoBehaviour {
         Vector3 pos = thing.transform.position;
         Vector3 cam_pos = cam.transform.position;
 
+        if (!on_camera(thing, cam))
+            return false;
         if (dir == Direction.EAST && pos.x + 1 >= cam_pos.x + 6.6)
             return false;
         if (dir == Direction.WEST && pos.x - 1 <= cam_pos.x - 6.6)

@@ -284,12 +284,16 @@ public class StateDamaged : State {
     }
 
     public override void OnStart() {
-        pc.GetComponent<Rigidbody>().AddForce(dir * force);
+        //pc.GetComponent<Rigidbody>().AddForce(dir * force);
         if (pc.invincible) {
             ConcludeState();
             return;
         }
         pc.health -= damage;
+        if (pc.health <= 0) {
+            ConcludeState();
+            return;
+        }
         timer = 0;
         pc_color = pc.GetComponent<Renderer>().material.color;
         pc.GetComponent<Renderer>().material.color = Color.red;
@@ -300,6 +304,7 @@ public class StateDamaged : State {
     public override void OnUpdate(float time_delta_fraction) {
         //flash
         timer += time_delta_fraction;
+        pc.transform.position += 0.5f * dir;
         if (timer >= cooldown) {
             pc.GetComponent<Rigidbody>().velocity = Vector3.zero; 
             pc.GetComponent<Renderer>().material.color = pc_color;

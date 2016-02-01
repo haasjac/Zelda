@@ -76,6 +76,13 @@ public class PlayerControl : MonoBehaviour {
     [HideInInspector]
     public bool b_active = true;
 
+    [HideInInspector]
+    public float dead_timer;
+    [HideInInspector]
+    public Vector3 start_pos;
+    [HideInInspector]
+    public Vector3 start_pos_cam;
+
     // Use this for initialization
     void Start () {
         Application.targetFrameRate = 60;
@@ -86,6 +93,9 @@ public class PlayerControl : MonoBehaviour {
         S = this;
 
         link_sprite = green;
+        dead_timer = 0;
+        start_pos = transform.position;
+        start_pos_cam = room_view.transform.position;
 
         animation_state_machine = new StateMachine();
         animation_state_machine.ChangeState(new StateIdleWithSprite(this, GetComponent<SpriteRenderer>(), link_sprite.link_run_down[0]));
@@ -96,8 +106,21 @@ public class PlayerControl : MonoBehaviour {
     // Update is called once per frame
     void Update() {
 
-        if (health <= 0)
-            Destroy(this.gameObject);
+        if (health <= 0) {
+            //this.gameObject.SetActive(false);
+            control_state_machine.ChangeState(new StateLinkStunned(this));
+            this.gameObject.GetComponent<SpriteRenderer>().enabled = false;
+            dead_timer += Time.deltaTime;
+            if (dead_timer > 2) {
+                transform.position = start_pos;
+                room_view.transform.position = start_pos_cam;
+                health = max_health;
+                dead_timer = 0;
+                this.gameObject.GetComponent<SpriteRenderer>().enabled = true;
+                control_state_machine.ChangeState(new StateLinkNormalMovement(this));
+            }
+            //Destroy(this.gameObject);
+        }
 
 
         animation_state_machine.Update();
@@ -150,7 +173,7 @@ public class PlayerControl : MonoBehaviour {
     }
 
     void OnTriggerEnter(Collider coll) {
-
+        
         switch (coll.gameObject.tag) {
             case "Rupee":
                 rupee_count += 20;

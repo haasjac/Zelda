@@ -89,45 +89,70 @@ public class Tile : MonoBehaviour {
                 gameObject.tag = "Door";
                 bc.isTrigger = true;
                 //which door is it?
-                if (this.tileNum == 48) {           //right
-                    bc.center = new Vector3(0.5f, 0, 0);
-                    bc.size = new Vector3(0.5f, 1, 1);
-                }
-                else if (this.tileNum == 51) {      //left
-                    bc.center = new Vector3(-0.5f, 0, 0);
-                    bc.size = new Vector3(-0.5f, 1, 1);
-                }
-                else if (this.tileNum == 26 || this.tileNum == 27) {        //bottom left / bottom right
-                    if (this.tileNum == 27) {
-                        bc.center = new Vector3(-0.5f, -0.33f, 0);
-                        bc.size = new Vector3(1.75f, -0.5f, 1);
-                    } else {
-                        bc.enabled = false;
-                        bc.isTrigger = false;
-                    }
-                }
-                else if (this.tileNum == 92 || this.tileNum == 93) {        //top left / top right
-                    if (this.tileNum == 93) {
-                        bc.center = new Vector3(-0.5f, 0.33f, 0);
-                        bc.size = new Vector3(1.75f, -0.5f, 1);
-                    } else {
-                        bc.enabled = false;
-                        bc.isTrigger = false;
-                    }
+                if (Application.loadedLevelName == "Dungeon") {
+                    if (this.tileNum == 48) {           //right
+                        bc.center = new Vector3(0.5f, 0, 0);
+                        bc.size = new Vector3(0.5f, 1, 1);
+                    } else if (this.tileNum == 51) {      //left
+                        bc.center = new Vector3(-0.5f, 0, 0);
+                        bc.size = new Vector3(-0.5f, 1, 1);
+                    } else if (this.tileNum == 26 || this.tileNum == 27) {        //bottom left / bottom right
+                        if (this.tileNum == 27) {
+                            bc.center = new Vector3(-0.5f, -0.33f, 0);
+                            bc.size = new Vector3(1.75f, -0.5f, 1);
+                        } else {
+                            bc.enabled = false;
+                            bc.isTrigger = false;
+                        }
+                    } else if (this.tileNum == 92 || this.tileNum == 93) {        //top left / top right
+                        if (this.tileNum == 93) {
+                            bc.center = new Vector3(-0.5f, 0.33f, 0);
+                            bc.size = new Vector3(1.75f, -0.5f, 1);
+                        } else {
+                            bc.enabled = false;
+                            bc.isTrigger = false;
+                        }
 
+                    }
+                }
+                else if (Application.loadedLevelName == "Custom_Level") {
+                    if (this.tileNum == 42) {           //right
+                        bc.center = new Vector3(0.5f, 0, 0);
+                        bc.size = new Vector3(0.5f, 1, 1);
+                    } else if (this.tileNum == 45) {      //left
+                        bc.center = new Vector3(-0.5f, 0, 0);
+                        bc.size = new Vector3(-0.5f, 1, 1);
+                    } else if (this.tileNum == 93 || this.tileNum == 94) {        //bottom left / bottom right
+                        if (this.tileNum == 93) {
+                            bc.center = new Vector3(-0.5f, -0.33f, 0);
+                            bc.size = new Vector3(1.75f, -0.5f, 1);
+                        } else {
+                            bc.enabled = false;
+                            bc.isTrigger = false;
+                        }
+                    } else if (this.tileNum == 97 || this.tileNum == 98) {        //top left / top right
+                        if (this.tileNum == 97) {
+                            bc.center = new Vector3(-0.5f, 0.33f, 0);
+                            bc.size = new Vector3(1.75f, -0.5f, 1);
+                        } else {
+                            bc.enabled = false;
+                            bc.isTrigger = false;
+                        }
+
+                    }
                 }
                 break;
             case 'W': // Water
                 bc.center = new Vector3(0,0.25f);
                 bc.size = new Vector3(1,0.5f,1);
                 gameObject.tag = "Water";
-                gameObject.layer = LayerMask.NameToLayer("Water");
+                //gameObject.layer = LayerMask.NameToLayer("Water");
                 break;
             case 'V': // Lava
                 bc.center = new Vector3(0, 0.25f);
                 bc.size = new Vector3(1, 0.5f, 1);
                 gameObject.tag = "Lava";
-                gameObject.layer = LayerMask.NameToLayer("Lava");
+                //gameObject.layer = LayerMask.NameToLayer("Lava");
                 break;
             case 'O': // Solid block that's not a wall
                 bc.center = new Vector3(0, 0.25f);
