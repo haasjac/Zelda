@@ -339,7 +339,7 @@ public class PlayerControl : MonoBehaviour {
                     }
                     else*/  if (coll.gameObject.name == "locked_T")
                     {    //upper-right
-                        locked.center = new Vector3(0, 0.33f, 0);
+                        locked.center = new Vector3(0, 0.8f, 0);
                         locked.size = new Vector3(1.75f, 0.5f, 1);
                         coll.gameObject.GetComponent<SpriteRenderer>().sprite = sprite_t;
                     }
