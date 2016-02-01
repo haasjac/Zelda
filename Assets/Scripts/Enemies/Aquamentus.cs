@@ -3,7 +3,7 @@ using System.Collections;
 
 public class Aquamentus : MonoBehaviour {
     //TACTICS: -attack at every interval
-    //         -slowl move back and forth (horizontally)
+    //         -slowly move back and forth (horizontally)
 
     //camera tracking
     public GameObject cam;
@@ -100,7 +100,7 @@ public class Aquamentus : MonoBehaviour {
     }
 
 
-    void OnCollisionEnter(Collision coll) {
+    void OnTriggerEnter(Collider coll) {
         switch (coll.gameObject.tag) {
             case "PlayerProjectile":
                 health -= 1;

@@ -103,7 +103,7 @@ public class Gel : MonoBehaviour {
         return true;
     }
 
-    void OnCollisionEnter(Collision coll) {
+    void OnTriggerEnter(Collider coll) {
         switch (coll.gameObject.tag) {
             case "Boomerang":
             case "PlayerProjectile":
