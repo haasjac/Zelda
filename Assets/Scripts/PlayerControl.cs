@@ -58,6 +58,8 @@ public class PlayerControl : MonoBehaviour {
     public Direction cam_dir = Direction.EAST;
     public float push_cooldown = 0;
     public float cam_shift = 0;
+    public bool push = false;
+    Vector3 block_origin = Vector3.zero;
     public Vector3 link_hold = Vector3.zero;
     public float link_stun = 0.0f;
 
@@ -136,7 +138,17 @@ public class PlayerControl : MonoBehaviour {
     }
 
     void FixedUpdate() {
-        if (push_cooldown > 0.0f) {      //move the block
+        //reset any block(s) when they go off camera
+        if(stagger_block != null && !Utils.on_camera(stagger_block, room_view))
+        {
+            push = false;
+            push_cooldown = 0f;
+            stagger_block.transform.position = block_origin;
+            stagger_block.tag = "Pushable";
+            stagger_block = null;
+        }
+
+        if (push_cooldown > 0.0f && push) {      //move the block
             push_cooldown -= Time.deltaTime;
 
             Vector3 pos = stagger_block.transform.position;
@@ -339,58 +351,25 @@ public class PlayerControl : MonoBehaviour {
                         control_state_machine.ChangeState(new StateDamaged(this, coll.contacts[0].normal, 0.5f));
                 }
                 break;
-            case "Pushable":
-                if (this.gameObject.tag == "Player") {
-                    print("Pushable Collision");
-                    push_cooldown = 1.0f;
-                    stagger_block = coll.gameObject;
-                    stagger_dir = current_direction;
-                    //each "pushable" block may only be moved once
-                    coll.gameObject.tag = "Static";
-                }
-                break;
-            case "Locked":
+            case "Locked_T":
+            case "Locked_R":
+            case "Locked_L":
                 print("Do you have the POWER???");
                 if (key_count > 0) {
-                    //make this fancy! (maybe add animations? spawn a replacement tile?)
-                    //80, 81, 101, 106
-                    //                    Vector3 pos = coll.gameObject.transform.position;
-                    //BoxCollider tile_coll = coll.gameObject.GetComponent<Tile>().GetComponent<BoxCollider>();
-                    //if (coll.gameObject.GetComponent<Tile>().tileNum == 80) {    //upper-left
-                    //    //no more solid collisions
-                    //    tile_coll.center = new Vector3(0, 3, 0);
-                    //    tile_coll.size = Vector3.zero;
-                    //} else if (coll.gameObject.GetComponent<Tile>().tileNum == 81) {    //upper-right
-                    //    tile_coll.center = new Vector3(-0.5f, 0.33f, 0);
-                    //    tile_coll.size = new Vector3(1.75f, 0.5f, 1);
-                    //} else if (coll.gameObject.GetComponent<Tile>().tileNum == 101) {    //right
-                    //    tile_coll.center = new Vector3(0.5f, 0, 0);
-                    //    tile_coll.size = new Vector3(0.5f, 1, 1);
-                    //} else if (coll.gameObject.GetComponent<Tile>().tileNum == 106) {    //left
-                    //    tile_coll.center = new Vector3(-0.5f, 0, 0);
-                    //    tile_coll.size = new Vector3(-0.5f, 1, 1);
-                    //}
                     BoxCollider locked = coll.gameObject.GetComponent<BoxCollider>();
-/*                   if (coll.gameObject.name == "locked_TL")
-                    {    //upper-left
-                        //no more solid collisions
-                        locked.center = new Vector3(0, 3 / 6f, 0);
-                        locked.size = Vector3.zero;
-                        coll.gameObject.GetComponent<SpriteRenderer>().sprite = sprite_tl;
-                    }
-                    else*/  if (coll.gameObject.name == "locked_T")
+                    if (coll.gameObject.tag == "Locked_T")
                     {    //upper-right
-                        locked.center = new Vector3(0, 0.33f, 0);
+                        locked.center = new Vector3(0, 0.75f, 0);
                         locked.size = new Vector3(1.75f, 0.5f, 1);
                         coll.gameObject.GetComponent<SpriteRenderer>().sprite = sprite_t;
                     }
-                    else if (coll.gameObject.name == "locked_R")
+                    else if (coll.gameObject.tag == "Locked_R" || coll.gameObject.name == "trigger_lock_right")
                     {    //right
                         locked.center = new Vector3(0.5f, 0, 0);
                         locked.size = new Vector3(0.5f, 1, 1);
                         coll.gameObject.GetComponent<SpriteRenderer>().sprite = sprite_r;
                     }
-                    else if (coll.gameObject.name == "locked_L")
+                    else if (coll.gameObject.tag == "Locked_L" || coll.gameObject.name == "trigger_lock_left")
                     {    //left
                         locked.center = new Vector3(-0.5f, 0, 0);
                         locked.size = new Vector3(-0.5f, 1, 1);
@@ -408,6 +387,33 @@ public class PlayerControl : MonoBehaviour {
     void OnCollisionStay(Collision coll) {
         switch (coll.gameObject.tag) {
             case "Pushable":
+                push_cooldown += Time.deltaTime;
+                if(push_cooldown >= 0.5f)
+                {
+                    if (this.gameObject.tag == "Player")
+                    {
+                        if (push_cooldown >= 0.5f)
+                        {
+                            print("Pushable Collision");
+                            push = true;
+                            push_cooldown = 1.0f;
+                            stagger_block = coll.gameObject;
+                            stagger_dir = current_direction;
+                            block_origin = stagger_block.transform.position;
+                            //each "pushable" block may only be moved once
+                            coll.gameObject.tag = "Static";
+                        }
+                    }
+                }
+                break;
+        }
+    }
+
+    void OnCollisionExit(Collision coll) {
+        switch (coll.gameObject.tag) {
+            case "Pushable":
+                if (push_cooldown < 0.5f)
+                    push_cooldown = 0f;
                 break;
         }
     }

@@ -10,7 +10,7 @@ public class Goriya : Gel {
     // Use this for initialization
     void Start() {
         target_cooldown = Random.Range(0.5f, 3.0f);
- //       InvokeRepeating("AnimationUpdate", 0f, 0.1f);
+        origin = this.transform.position;
     }
 
     // Update is called once per frame
