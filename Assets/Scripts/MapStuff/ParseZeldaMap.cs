@@ -94,7 +94,7 @@ public class ParseZeldaMap : MonoBehaviour {
 		}
 		string str = string.Join("\n",ind2);
 		
-		File.WriteAllText(Application.dataPath+"/"+"spriteText.txt", str);
+		//File.WriteAllText(Application.dataPath+"/"+"spriteText.txt", str);
 		print (str);
 	}
 	
@@ -154,7 +154,7 @@ public class ParseZeldaMap : MonoBehaviour {
 	
 	void SaveTextureToFile( Texture2D tex, string fileName) {
 		byte[] bytes = tex.EncodeToJPG(100);
-		File.WriteAllBytes(Application.dataPath + "/"+fileName, bytes);
+		//File.WriteAllBytes(Application.dataPath + "/"+fileName, bytes);
 	}
 	
 	
