@@ -356,6 +356,7 @@ public class PlayerControl : MonoBehaviour {
             case "Locked_L":
                 print("Do you have the POWER???");
                 if (key_count > 0) {
+                    key_count--;
                     BoxCollider locked = coll.gameObject.GetComponent<BoxCollider>();
                     if (coll.gameObject.tag == "Locked_T")
                     {    //upper-right

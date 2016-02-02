@@ -3,6 +3,10 @@ using System.Collections;
 
 public class Enemy : MonoBehaviour
 {
+    public GameObject rupee;
+    public GameObject heart;
+    public GameObject bomb;
+
     public GameObject cam;
     public float movement_speed = 2f;
     public float change_chance = 5;     //percent change to change direction
@@ -86,15 +90,6 @@ public class Enemy : MonoBehaviour
             case "Locked":
                 target = 1.0f;
                 current_dir = change_direction(current_dir);
-                //target = 0.0f;
-                //if (current_dir == Direction.NORTH)
-                //    current_dir = Direction.EAST;
-                //else if (current_dir == Direction.EAST)
-                //    current_dir = Direction.SOUTH;
-                //else if (current_dir == Direction.SOUTH)
-                //    current_dir = Direction.WEST;
-                //else
-                //    current_dir = Direction.NORTH;
                 break;
             default:
                 break;
@@ -109,33 +104,19 @@ public class Enemy : MonoBehaviour
                 print("bounds encounter");
                 target = 1.0f;
                 current_dir = change_direction(current_dir);
-                //if (current_dir == Direction.NORTH)
-                //    current_dir = Direction.SOUTH;
-                //else if (current_dir == Direction.SOUTH)
-                //    current_dir = Direction.NORTH;
-                //else if (current_dir == Direction.EAST)
-                //    current_dir = Direction.WEST;
-                //else
-                //    current_dir = Direction.EAST;
                 break;
             case "PlayerProjectile":
                 health -= 1;
-                if (health <= 0)
+                if (health <= 0) {
+                    Loot_drops.drop_item(rupee, heart, bomb, this.gameObject.transform.position);
                     Destroy(this.gameObject);
+                }
                 break;
             case "Static":
 
             case "Locked":
                 target = 1.0f;
                 current_dir = change_direction(current_dir);
-                //if (current_dir == Direction.NORTH)
-                //    current_dir = Direction.EAST;
-                //else if (current_dir == Direction.EAST)
-                //    current_dir = Direction.SOUTH;
-                //else if (current_dir == Direction.SOUTH)
-                //    current_dir = Direction.WEST;
-                //else
-                //    current_dir = Direction.NORTH;
                 break;
             default:
                 break;

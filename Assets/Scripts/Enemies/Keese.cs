@@ -3,6 +3,10 @@ using System.Collections;
 
 public class Keese : MonoBehaviour {
 
+    public GameObject rupee;
+    public GameObject heart;
+    public GameObject bomb;
+
     public GameObject cam;
     public Vector3 origin;
     public Direction horizontal = Direction.NORTH;
@@ -105,8 +109,10 @@ public class Keese : MonoBehaviour {
             case "Boomerang":
             case "PlayerProjectile":
                 health -= 1;
-                if (health <= 0)
+                if (health <= 0) {
+                    Loot_drops.drop_item(rupee, heart, bomb, this.gameObject.transform.position);
                     Destroy(this.gameObject);
+                }
                 break;
         }
     }

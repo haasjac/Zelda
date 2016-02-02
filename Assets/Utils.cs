@@ -7,13 +7,13 @@ public class Utils : MonoBehaviour {
         Vector3 pos = thing.transform.position;
         Vector3 cam_pos = cam.transform.position;
 
-        if (pos.x >= cam_pos.x + 6.6)
+        if (pos.x >= cam_pos.x + 8.6)
             return false;
-        if (pos.x <= cam_pos.x - 6.6)
+        if (pos.x <= cam_pos.x - 8.6)
             return false;
-        if (pos.y >= cam_pos.y + 2.6)
+        if (pos.y >= cam_pos.y + 6.6)
             return false;
-        if (pos.y <= cam_pos.y - 4.6)
+        if (pos.y <= cam_pos.y - 6.6)
             return false;
 
         return true;

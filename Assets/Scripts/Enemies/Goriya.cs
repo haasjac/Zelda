@@ -11,6 +11,7 @@ public class Goriya : Gel {
     void Start() {
         target_cooldown = Random.Range(0.5f, 3.0f);
         origin = this.transform.position;
+        health = 3;
     }
 
     // Update is called once per frame

@@ -6,6 +6,10 @@ public class Gel : MonoBehaviour {
     public GameObject cam;
     public Vector3 origin;
 
+    public GameObject rupee;
+    public GameObject heart;
+    public GameObject bomb;
+
     public float movement_speed = 1f;
     public float distance = 0.0f;
     public float cooldown = 0.0f;
@@ -108,8 +112,10 @@ public class Gel : MonoBehaviour {
             case "Boomerang":
             case "PlayerProjectile":
                 health -= 1;
-                if (health <= 0)
+                if (health <= 0) {
+                    Loot_drops.drop_item(rupee, heart, bomb, this.gameObject.transform.position);
                     Destroy(this.gameObject);
+                }
                 break;
         }
     }

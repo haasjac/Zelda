@@ -3,6 +3,10 @@ using System.Collections;
 
 public class Wallmaster : MonoBehaviour {
 
+    public GameObject rupee;
+    public GameObject heart;
+    public GameObject bomb;
+
     public Vector3 origin;
     public GameObject cam;
     public GameObject link;
@@ -11,6 +15,7 @@ public class Wallmaster : MonoBehaviour {
     public float movement_speed = 1f;
     public int health = 3;
     public float flee_cooldown = 0.0f;
+    public float stun = 0.0f;
     public bool flee = false;
     public Direction direction = Direction.NORTH;
 
@@ -25,7 +30,12 @@ public class Wallmaster : MonoBehaviour {
     void FixedUpdate() {
         //is your room on screen?
         //PERFORM CHECK HERE
-        if (visibility_check(this.gameObject, cam)) {
+//        if (visibility_check(this.gameObject, cam)) {
+        if(Utils.on_camera(this.gameObject, cam)) { 
+            if(stun > 0.0f) {
+                stun -= Time.deltaTime;
+                return;
+            }
             //move closer to player
             Vector3 link_pos = link.transform.position;
             Vector3 pos = this.transform.position;
@@ -58,7 +68,7 @@ public class Wallmaster : MonoBehaviour {
         }
     }
 
-    void OnCollisionEnter(Collision coll) {
+    void OnTriggerEnter(Collider coll) {
         switch (coll.gameObject.tag) {
             case "Player":
                 //move link and camera back to start
@@ -69,10 +79,15 @@ public class Wallmaster : MonoBehaviour {
                 break;
             case "PlayerProjectile":
                 health -= 1;
-                if (health <= 0)
+                if (health <= 0) {
+                    Loot_drops.drop_item(rupee, heart, bomb, this.gameObject.transform.position);
                     Destroy(this.gameObject);
+                }
                 else
                     Flee();
+                break;
+            case "Boomerang":
+                stun = 2.5f;
                 break;
         }
     }
@@ -84,19 +99,19 @@ public class Wallmaster : MonoBehaviour {
         flee_cooldown = Random.Range(0.5f, 3f);
     }
 
-    public bool visibility_check(GameObject thing, GameObject cam) { //h = 5.5, v = 3
-        Vector3 pos = this.transform.position;
-        Vector3 cam_pos = cam.transform.position;
+    //public bool visibility_check(GameObject thing, GameObject cam) { //h = 5.5, v = 3
+    //    Vector3 pos = this.transform.position;
+    //    Vector3 cam_pos = cam.transform.position;
 
-        if (pos.x >= cam_pos.x + 6.5)
-            return false;
-        if (pos.x <= cam_pos.x - 6.5)
-            return false;
-        if (pos.y >= cam_pos.y + 4.0)
-            return false;
-        if (pos.y <= cam_pos.y - 5.0)
-            return false;
+    //    if (pos.x >= cam_pos.x + 6.5)
+    //        return false;
+    //    if (pos.x <= cam_pos.x - 6.5)
+    //        return false;
+    //    if (pos.y >= cam_pos.y + 4.0)
+    //        return false;
+    //    if (pos.y <= cam_pos.y - 5.0)
+    //        return false;
 
-        return true;
-    }
+    //    return true;
+    //}
 }

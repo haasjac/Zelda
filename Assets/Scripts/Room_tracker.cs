@@ -52,8 +52,8 @@ public class Room_tracker : MonoBehaviour {
                 //spawn the object in the center of the room
                 if (all_clear && !triggered) {
                     triggered = true;
-                    Instantiate<GameObject>(focus);
-                    focus.transform.position = this.transform.position;
+                    GameObject spawn = Instantiate<GameObject>(focus);
+                    spawn.transform.position = this.transform.position;
                 }
                 break;
             case Condition.OnPushOpen:
