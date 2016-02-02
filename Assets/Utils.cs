@@ -36,4 +36,10 @@ public class Utils : MonoBehaviour {
 
         return true;
     }
+
+    public void damage_color(GameObject enemy)
+    {
+        enemy.GetComponent<Rigidbody>().velocity = Vector3.zero;
+        enemy.GetComponent<Renderer>().material.color = Color.white;
+    }
 }

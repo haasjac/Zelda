@@ -13,6 +13,7 @@ public class Enemy : MonoBehaviour
     public Direction current_dir = Direction.NORTH;
     public float target = 0f;
     public int health = 3;
+    public float stun = 0.0f;
 
     // Use this for initialization
     void Start()
@@ -33,6 +34,12 @@ public class Enemy : MonoBehaviour
         //if you're off camera, do nothing
         if (!Utils.on_camera(this.gameObject, cam))
             return;
+
+        //are you stunned?
+        if(stun > 0.0f){
+            stun -= Time.deltaTime;
+            return;
+        }
 
         //if you've finished moving, choose a new direction and distance
         if (target <= 0.0f)
@@ -104,6 +111,9 @@ public class Enemy : MonoBehaviour
                 print("bounds encounter");
                 target = 1.0f;
                 current_dir = change_direction(current_dir);
+                break;
+            case "Boomerang":
+                stun = 2.5f;
                 break;
             case "PlayerProjectile":
                 health -= 1;
