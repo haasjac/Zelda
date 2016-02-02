@@ -169,5 +169,27 @@ public class Tile : MonoBehaviour {
                 bc.enabled = false;
                 break;
         }
-	}	
+	}
+
+
+    //movement check
+    public static bool check_movement(GameObject thing, Direction dir)
+    {
+        Vector3 pos = thing.transform.position;
+        int x = Mathf.FloorToInt(pos.x);
+        int y = Mathf.FloorToInt(pos.y);
+
+        if (dir == Direction.NORTH)
+            y += 1;
+        else if (dir == Direction.SOUTH)
+            y -= 1;
+        else if (dir == Direction.EAST)
+            x += 1;
+        else
+            x -= 1;
+
+        //check the tile
+        return (ShowMapOnCamera.MAP_TILES[x, y].gameObject.GetComponent<Tile>().sprend.sprite == spriteArray[29]);
+
+    }
 }

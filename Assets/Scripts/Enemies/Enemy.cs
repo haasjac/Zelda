@@ -3,6 +3,63 @@ using System.Collections;
 
 public class Enemy : MonoBehaviour
 {
+    public GameObject cam;
+    public GameObject rupee;
+    public GameObject heart;
+    public GameObject bomb;
+
+    public float movement_speed = 1f;
+    public float target = 1f;
+    public float current = 0.0f;
+    public float stun = 0.0f;
+    public int health = 2;
+    public Direction current_dir = Direction.NORTH;
+
+    public Vector3 origin;
+
+
+    void Start() {
+        origin = this.transform.position;
+    }
+
+    void FixedUpdate() {
+        if (!Utils.on_camera(this.gameObject, cam)) {
+            this.transform.position = origin;
+            return;
+        }
+
+        if(stun > 0.0f) {
+            stun -= Time.deltaTime;
+            return;
+        }
+
+        if (current <= 0.0f) {
+            //check if movement is ok
+            while (!Tile.check_movement(this.gameObject, current_dir)) {
+                change_dir();
+            }
+            current = 1f;
+        }
+
+        Vector3 pos = this.transform.position;
+        float shift = Time.deltaTime * movement_speed;
+        if (shift > current)
+            shift = current;
+
+        if (current_dir == Direction.NORTH)
+            pos.y += shift;
+        else if (current_dir == Direction.SOUTH)
+            pos.y -= shift;
+        else if (current_dir == Direction.EAST)
+            pos.x += shift;
+        else
+            pos.x -= shift;
+
+        current -= shift;
+        this.transform.position = pos;
+
+    }
+    /*
     public GameObject rupee;
     public GameObject heart;
     public GameObject bomb;
@@ -72,7 +129,7 @@ public class Enemy : MonoBehaviour
             this.transform.position = pos;
         }
     }
-
+*/
     public void change_dir()
     {
         int direction = Random.Range(0, 99);
@@ -86,7 +143,7 @@ public class Enemy : MonoBehaviour
             current_dir = Direction.WEST;
 
     }
-
+/*
     void OnCollisionStay(Collision coll)
     {
         //if you collide with a solid object, change direction
@@ -102,15 +159,15 @@ public class Enemy : MonoBehaviour
                 break;
         }
     }
-
+*/
     void OnTriggerEnter(Collider coll)
     {
         switch (coll.gameObject.tag)
         {
             case "Bounds":
                 print("bounds encounter");
-                target = 1.0f;
-                current_dir = change_direction(current_dir);
+//                target = 1.0f;
+//                current_dir = change_direction(current_dir);
                 break;
             case "Boomerang":
                 stun = 2.5f;
@@ -125,14 +182,14 @@ public class Enemy : MonoBehaviour
             case "Static":
 
             case "Locked":
-                target = 1.0f;
-                current_dir = change_direction(current_dir);
+//                target = 1.0f;
+//                current_dir = change_direction(current_dir);
                 break;
             default:
                 break;
         }
     }
-
+/*
     public Direction change_direction(Direction dir) {
         if (dir == Direction.NORTH)
             return Direction.EAST;
@@ -163,5 +220,5 @@ public class Enemy : MonoBehaviour
             return Physics.Raycast(thing.transform.position, direction, dist);
         }
 
-    }
+    }*/
 }

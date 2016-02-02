@@ -74,9 +74,9 @@ public class Aquamentus : MonoBehaviour {
         //instantiate 3 orbs and hurl them at the player
         //extend x value to ensure each orb collides with something
         if (link_pos.x < transform.position.x)
-            link_pos.x -= 10f;
+            link_pos.x -= 200f;
         else
-            link_pos.x += 10f;
+            link_pos.x += 200f;
 
         target_middle = link_pos;
         link_pos.y += 6f;

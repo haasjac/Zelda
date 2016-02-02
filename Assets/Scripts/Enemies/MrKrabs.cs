@@ -125,10 +125,13 @@ public class MrKrabs : MonoBehaviour {
         {
             case "PlayerProjectile":
                 //check what color link is vs. what color you are
-
-                health -= 1;
-                if (health <= 0)
-                    Destroy(this.gameObject);
+                if ((!blue && link.GetComponent<PlayerControl>().link_sprite == link.GetComponent<PlayerControl>().red)
+                    || (blue && link.GetComponent<PlayerControl>().link_sprite == link.GetComponent<PlayerControl>().blue))
+                {
+                    health -= 1;
+                    if (health <= 0)
+                        Destroy(this.gameObject);
+                }
                 break;
             case "Boomerang":
                 stun = 2.5f;
